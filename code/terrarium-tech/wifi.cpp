@@ -1,18 +1,19 @@
-#include "thsensor.h"
+#include "wifi.h"
 
 
-ThSensor::ThSensor(byte pin) {
+
+WIFI::WIFI(byte pin) {
   this->pin = pin;
   //lastReading = LOW;
   
   init();
 }
-void ThSensor::init() {
+void WIFI::init() {
   pinMode(pin, INPUT);
   update();
 }
 
-void ThSensor::update() {
+void WIFI::update() {
     // You can handle the debounce of the button directly
     // in the class, so you don't have to think about it
     // elsewhere in your code
@@ -27,7 +28,7 @@ void ThSensor::update() {
     // }
     // lastReading = newReading;
 }
-byte ThSensor::getState() {
+byte WIFI::getState() {
   update();
   return state;
 }

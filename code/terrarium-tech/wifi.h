@@ -1,16 +1,18 @@
-#ifndef motionsensor_h
-#define motionsensor_h
+#ifndef wifi_h
+#define wifi_h
 
 #include <Arduino.h>
 
-class MotionSensor {
-  
+class WIFI {
+
+
   private: 
     byte pin;
     byte state;
-  
+
+    
   public: 
-    MotionSensor(byte pin);
+    WIFI(byte pin);
     void init();
     void update();
     byte getState();

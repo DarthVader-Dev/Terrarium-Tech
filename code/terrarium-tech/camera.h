@@ -5,12 +5,15 @@
 
 
 class Camera {
-  private: byte pin;
-  public: 
-    camera(byte pin);
-    void init();
-    
+  private: 
+    byte pin;
+    byte state;
 
+  public: 
+    Camera(byte pin);
+    void init();
+    void update();
+    byte getState();
 
 };
 
