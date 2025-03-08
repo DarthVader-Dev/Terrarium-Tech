@@ -1,1 +1,3 @@
 *.DS_Store
+arduino_secrets.h
+code/terrarium-tech/arduino_secrets.h

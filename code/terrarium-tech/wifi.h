@@ -12,11 +12,14 @@ class WIFI {
 
     
   public: 
-    WIFI(byte pin);
+    //WIFI(byte pin);
+    WIFI();
     void init();
     void update();
     byte getState();
-
+    void printWifiStatus();
+    void showWebPage();
+    void beginSetup();
 
 };
 
