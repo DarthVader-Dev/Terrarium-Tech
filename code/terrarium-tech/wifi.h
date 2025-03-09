@@ -20,6 +20,7 @@ class WIFI {
     void printWifiStatus();
     void showWebPage();
     void beginSetup();
+    void writeData(char d[]);
 
 };
 

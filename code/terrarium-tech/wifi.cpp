@@ -1,7 +1,6 @@
 #include "wifi.h"
-
 #include "WiFiS3.h"
-
+#include "file_system.h"
 #include "arduino_secrets.h" 
 
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
@@ -15,6 +14,9 @@ int keyIndex = 0;
 int led =  LED_BUILTIN;
 
 int status = WL_IDLE_STATUS;
+
+FILESYSTEM fileSystem;
+bool fileWrittenTo;
 
 WiFiServer server(80);
 
@@ -80,7 +82,7 @@ void WIFI::beginSetup(){
 
 
   // check for the WiFi module:
-
+  fileSystem.beginSetup();
   if (WiFi.status() == WL_NO_MODULE) {
 
     Serial.println("Communication with WiFi module failed!");
@@ -165,13 +167,20 @@ WiFiClient client = server.available();   // listen for incoming clients
             client.println();
 
 
+            
+
             // the content of the HTTP response follows the header:
 
-            client.print("<p style=\"font-size:7vw;\">Click <a href=\"/H\">here</a> turn the LED on<br></p>");
+            //client.print("<p style=\"font-size:7vw;\">Click <a href=\"/H\">here</a> turn the LED on<br></p>");
 
-            client.print("<p style=\"font-size:7vw;\">Click <a href=\"/L\">here</a> turn the LED off<br></p>");
+            //client.print("<p style=\"font-size:7vw;\">Click <a href=\"/L\">here</a> turn the LED off<br></p>");
 
-            
+            client.print(fileSystem.getWebPage());
+
+  if(!fileWrittenTo){
+    fileSystem.writeData("<h1>Works!</h1>");
+    fileWrittenTo = true;
+  }
 
             // The HTTP response ends with another blank line:
 
@@ -221,4 +230,9 @@ WiFiClient client = server.available();   // listen for incoming clients
     Serial.println("client disconnected");
 
   }
+}
+
+void WIFI::writeData(char d[]){
+  WiFiClient client = server.available(); 
+  client.println(d);
 }
