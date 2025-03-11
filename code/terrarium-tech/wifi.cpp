@@ -16,6 +16,8 @@ int led =  LED_BUILTIN;
 int status = WL_IDLE_STATUS;
 
 FILESYSTEM fileSystem;
+
+bool WIFISETUPCOMPLETE;
 bool fileWrittenTo;
 
 WiFiServer server(80);
@@ -82,7 +84,7 @@ void WIFI::beginSetup(){
 
 
   // check for the WiFi module:
-  fileSystem.beginSetup();
+  //fileSystem.beginSetup();
   if (WiFi.status() == WL_NO_MODULE) {
 
     Serial.println("Communication with WiFi module failed!");
@@ -130,6 +132,12 @@ void WIFI::beginSetup(){
 
 
 void WIFI::showWebPage(){
+
+if(!WIFISETUPCOMPLETE){
+  beginSetup();
+  WIFISETUPCOMPLETE = true;
+}
+
 WiFiClient client = server.available();   // listen for incoming clients
 
 

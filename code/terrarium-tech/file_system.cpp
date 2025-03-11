@@ -1,6 +1,7 @@
 #include "file_system.h"
-
+#include <SD.h>
 File myFile;
+bool FILESYSTEMSETUPCOMPLETE;
 
 
 FILESYSTEM::FILESYSTEM() {
@@ -103,6 +104,11 @@ void FILESYSTEM::writeData(char d[]) {
 
 
 String FILESYSTEM::getWebPage(){
+if(!FILESYSTEMSETUPCOMPLETE){
+  beginSetup();
+  FILESYSTEMSETUPCOMPLETE = true;
+}
+
  return readFileToString("INDX.HTM");
 }
 

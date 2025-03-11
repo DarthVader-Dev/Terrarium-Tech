@@ -3,7 +3,7 @@
 #include "RTClib.h"
 
 RTC_DS1307 rtc;
-bool SETUPCOMPLETE;
+bool LOGGERSETUPCOMPLETE;
 
 LOGGER::LOGGER() {
 
@@ -12,16 +12,16 @@ LOGGER::LOGGER() {
 
 void LOGGER::log() {
 
-  if(!SETUPCOMPLETE){
+  if(!LOGGERSETUPCOMPLETE){
     beginSetup();
     //rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
-    SETUPCOMPLETE = true;
+    LOGGERSETUPCOMPLETE = true;
   }
   
   //if(!TIMESHOWN){
   DateTime time = rtc.now();
    //Serial.println(time.timestamp());
-    //Serial.println(String("DateTime::TIMESTAMP_FULL:\t")+time.timestamp(DateTime::TIMESTAMP_FULL));
+  Serial.println(String("DateTime::TIMESTAMP_FULL:\t")+time.timestamp(DateTime::TIMESTAMP_FULL));
   //}
   
 }

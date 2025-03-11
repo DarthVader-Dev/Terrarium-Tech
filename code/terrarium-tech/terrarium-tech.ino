@@ -8,7 +8,7 @@ LOGGER logger;
 //FILESYSTEM fileSystem;
 
 void setup(){
-  wifiServer.beginSetup();
+  //wifiServer.beginSetup();
   //fileSystem.beginSetup();
   //logger.beginSetup();
   //logger.log();
