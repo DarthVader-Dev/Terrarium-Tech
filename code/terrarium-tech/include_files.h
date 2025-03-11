@@ -7,3 +7,4 @@
 #include "thsensor.h"
 #include "camera.h"
 #include "file_system.h" 
+#include "logger.h"

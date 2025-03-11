@@ -35,9 +35,9 @@ void FILESYSTEM::beginSetup() {
   Serial.println("initialization done.");
 
   // open the file for reading:
-  myFile = SD.open("INDE~6.HTM");
+  myFile = SD.open("INDX.HTM");
   if (myFile) {
-    Serial.println("INDE~6.HTM:");
+    Serial.println("INDX.HTM:");
 
     // read from the file until there's nothing else in it:
     while (myFile.available()) {
@@ -47,15 +47,15 @@ void FILESYSTEM::beginSetup() {
     myFile.close();
   } else {
     // if the file didn't open, print an error:
-    Serial.println("error opening index.html");
+    Serial.println("error opening INDX.HTM");
   }
 }
 
 void FILESYSTEM::readData() {
     pinMode(10, OUTPUT);
-    myFile = SD.open("INDE~6.HTM");
+    myFile = SD.open("INDX.HTM");
   if (myFile) {
-    Serial.println("INDE~6.HTM:");
+    Serial.println("INDX.HTM:");
 
     // read from the file until there's nothing else in it:
     while (myFile.available()) {
@@ -65,7 +65,7 @@ void FILESYSTEM::readData() {
     myFile.close();
   } else {
     // if the file didn't open, print an error:
-    Serial.println("error opening INDE~6.HTM");
+    Serial.println("error opening INDX.HTM");
   }
 }
 
@@ -86,7 +86,7 @@ String FILESYSTEM::readFileToString(const char *filename) {
 }
 
 void FILESYSTEM::writeData(char d[]) {
-  myFile = SD.open("INDE~6.HTM", FILE_WRITE);
+  myFile = SD.open("INDX.HTM", FILE_WRITE);
 
   // if the file opened okay, write to it:
   if (myFile) {
@@ -103,6 +103,6 @@ void FILESYSTEM::writeData(char d[]) {
 
 
 String FILESYSTEM::getWebPage(){
- return readFileToString("INDE~6.HTM");
+ return readFileToString("INDX.HTM");
 }
 

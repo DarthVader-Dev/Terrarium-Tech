@@ -177,10 +177,10 @@ WiFiClient client = server.available();   // listen for incoming clients
 
             client.print(fileSystem.getWebPage());
 
-  if(!fileWrittenTo){
-    fileSystem.writeData("<h1>Works!</h1>");
-    fileWrittenTo = true;
-  }
+  // if(!fileWrittenTo){
+  //   fileSystem.writeData("<h1>Works!</h1>");
+  //   fileWrittenTo = true;
+  // }
 
             // The HTTP response ends with another blank line:
 
