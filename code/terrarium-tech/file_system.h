@@ -1,8 +1,6 @@
 #ifndef file_system_h
 #define file_system_h
 
-//#include <SD.h>
-
 #include <Arduino.h>
 
 class FILESYSTEM {

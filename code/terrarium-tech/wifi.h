@@ -12,7 +12,7 @@ class WIFI {
 
     
   public: 
-    //WIFI(byte pin);
+
     WIFI();
     void init();
     void update();

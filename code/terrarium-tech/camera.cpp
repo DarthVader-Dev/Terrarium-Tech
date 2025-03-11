@@ -3,7 +3,7 @@
 
 Camera::Camera(byte pin) {
   this->pin = pin;
-  //lastReading = LOW;
+
   
   init();
 }

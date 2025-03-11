@@ -3,11 +3,9 @@
 #include "file_system.h"
 #include "arduino_secrets.h" 
 
-///////please enter your sensitive data in the Secret tab/arduino_secrets.h
+char ssid[] = SECRET_SSID;
 
-char ssid[] = SECRET_SSID;        // your network SSID (name)
-
-char pass[] = SECRET_PASS;    // your network password (use for WPA, or use as key for WEP)
+char pass[] = SECRET_PASS;
 
 int keyIndex = 0; 
 
@@ -22,15 +20,12 @@ bool fileWrittenTo;
 
 WiFiServer server(80);
 
-//WIFI::WIFI(byte pin) {
- // this->pin = pin;
   WIFI::WIFI() {
   
   init();
 }
 void WIFI::init() {
-  //pinMode(pin, INPUT);
-  //update();
+
 }
 
 void WIFI::update() {
@@ -43,53 +38,29 @@ byte WIFI::getState() {
 
 void WIFI::printWifiStatus() {
 
-  // print the SSID of the network you're attached to:
 
   Serial.print("SSID: ");
-
   Serial.println(WiFi.SSID());
-
-
-  // print your board's IP address:
-
   IPAddress ip = WiFi.localIP();
-
   Serial.print("IP Address: ");
-
   Serial.println(ip);
-
-
-  // print the received signal strength:
-
   long rssi = WiFi.RSSI();
-
   Serial.print("signal strength (RSSI):");
-
   Serial.print(rssi);
-
   Serial.println(" dBm");
-
-  // print where to go in a browser:
-
   Serial.print("To see this page in action, open a browser to http://");
-
   Serial.println(ip);
 
 }
 
 void WIFI::beginSetup(){
-  Serial.begin(9600);      // initialize serial communication
+  Serial.begin(9600); 
 
-  pinMode(led, OUTPUT);      // set the LED pin mode
+  pinMode(led, OUTPUT); 
 
-
-  // check for the WiFi module:
-  //fileSystem.beginSetup();
   if (WiFi.status() == WL_NO_MODULE) {
 
     Serial.println("Communication with WiFi module failed!");
-
-    // don't continue
 
     while (true);
 
@@ -104,27 +75,19 @@ void WIFI::beginSetup(){
 
   }
 
-
-  // attempt to connect to WiFi network:
-
   while (status != WL_CONNECTED) {
 
     Serial.print("Attempting to connect to Network named: ");
 
-    Serial.println(ssid);                   // print the network name (SSID);
-
-
-    // Connect to WPA/WPA2 network. Change this line if using open or WEP network:
+    Serial.println(ssid);
 
     status = WiFi.begin(ssid, pass);
-
-    // wait 10 seconds for connection:
 
     delay(10000);
 
   }
 
-  server.begin();                           // start the web server on port 80
+  server.begin();
 
   printWifiStatus();   
 }
@@ -138,35 +101,26 @@ if(!WIFISETUPCOMPLETE){
   WIFISETUPCOMPLETE = true;
 }
 
-WiFiClient client = server.available();   // listen for incoming clients
+WiFiClient client = server.available();
 
 
-  if (client) {                             // if you get a client,
+  if (client) { 
 
-    Serial.println("new client");           // print a message out the serial port
+    Serial.println("new client");
 
-    String currentLine = "";                // make a String to hold incoming data from the client
+    String currentLine = "";
 
-    while (client.connected()) {            // loop while the client's connected
+    while (client.connected()) {
 
-      if (client.available()) {             // if there's bytes to read from the client,
+      if (client.available()) {
 
-        char c = client.read();             // read a byte, then
+        char c = client.read();
 
-        Serial.write(c);                    // print it out to the serial monitor
+        Serial.write(c);
 
-        if (c == '\n') {                    // if the byte is a newline character
-
-
-          // if the current line is blank, you got two newline characters in a row.
-
-          // that's the end of the client HTTP request, so send a response:
+        if (c == '\n') { 
 
           if (currentLine.length() == 0) {
-
-            // HTTP headers always start with a response code (e.g. HTTP/1.1 200 OK)
-
-            // and a content-type so the client knows what's coming, then a blank line:
 
             client.println("HTTP/1.1 200 OK");
 
@@ -174,64 +128,39 @@ WiFiClient client = server.available();   // listen for incoming clients
 
             client.println();
 
-
-            
-
-            // the content of the HTTP response follows the header:
-
-            //client.print("<p style=\"font-size:7vw;\">Click <a href=\"/H\">here</a> turn the LED on<br></p>");
-
-            //client.print("<p style=\"font-size:7vw;\">Click <a href=\"/L\">here</a> turn the LED off<br></p>");
-
             client.print(fileSystem.getWebPage());
-
-  // if(!fileWrittenTo){
-  //   fileSystem.writeData("<h1>Works!</h1>");
-  //   fileWrittenTo = true;
-  // }
-
-            // The HTTP response ends with another blank line:
 
             client.println();
 
-            // break out of the while loop:
-
             break;
 
-          } else {    // if you got a newline, then clear currentLine:
+          } else { 
 
             currentLine = "";
 
           }
 
-        } else if (c != '\r') {  // if you got anything else but a carriage return character,
+        } else if (c != '\r') { 
 
-          currentLine += c;      // add it to the end of the currentLine
+          currentLine += c; 
 
         }
 
-
-        // Check to see if the client request was "GET /H" or "GET /L":
-
         if (currentLine.endsWith("GET /H")) {
 
-          digitalWrite(LED_BUILTIN, HIGH);               // GET /H turns the LED on
+          digitalWrite(LED_BUILTIN, HIGH);
 
         }
 
         if (currentLine.endsWith("GET /L")) {
 
-          digitalWrite(LED_BUILTIN, LOW);                // GET /L turns the LED off
+          digitalWrite(LED_BUILTIN, LOW);
 
         }
 
       }
 
-      
-
     }
-
-    // close the connection:
 
     client.stop();
 

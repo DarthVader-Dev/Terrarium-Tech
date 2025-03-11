@@ -1,4 +1,3 @@
-
 #include <Arduino.h>
 #include "file_system.h" 
 #include "logger.h"
