@@ -14,7 +14,7 @@ void ThSensor::init() {
 
 void ThSensor::update() {
    
-}
+} 
 byte ThSensor::getState() {
   update();
   return state;

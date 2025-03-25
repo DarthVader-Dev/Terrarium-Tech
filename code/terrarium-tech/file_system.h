@@ -18,7 +18,7 @@ class FILESYSTEM {
     void update();
     byte getState();    
     void beginSetup();
-    void writeData(char d[]);
+    void writeLogData(String fileName, char d[]);
     void readData();
     String getWebPage();
     String readFileToString(const char *filename);

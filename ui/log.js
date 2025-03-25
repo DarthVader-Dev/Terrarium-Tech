@@ -1,0 +1,12 @@
+var data = [
+    {"timestamp": "2025-03-12 12:00:00", "temp": 72.5, "humidity": 45.2},
+    {"timestamp": "2025-03-12 12:01:00", "temp": 74.1, "humidity": 46.5},
+    {"timestamp": "2025-03-12 12:02:00", "temp": 73.8, "humidity": 47.0},
+    {"timestamp": "2025-03-12 12:03:00", "temp": 75.2, "humidity": 44.8},
+    {"timestamp": "2025-03-12 12:04:00", "temp": 76.0, "humidity": 43.5},
+    {"timestamp": "2025-03-12 12:05:00", "temp": 74.5, "humidity": 48.2},
+    {"timestamp": "2025-03-12 12:06:00", "temp": 72.8, "humidity": 49.0},
+    {"timestamp": "2025-03-12 12:07:00", "temp": 71.6, "humidity": 50.1},
+    {"timestamp": "2025-03-12 12:08:00", "temp": 73.2, "humidity": 46.8},
+    {"timestamp": "2025-03-12 12:09:00", "temp": 75.9, "humidity": 42.9}
+]

@@ -5,7 +5,6 @@ bool FILESYSTEMSETUPCOMPLETE;
 
 
 FILESYSTEM::FILESYSTEM() {
-
   init();
 }
 void FILESYSTEM::init() {
@@ -82,18 +81,23 @@ String FILESYSTEM::readFileToString(const char *filename) {
     return content;
 }
 
-void FILESYSTEM::writeData(char d[]) {
-  myFile = SD.open("INDX.HTM", FILE_WRITE);
+void FILESYSTEM::writeLogData(String fileName,char information[]) {
+  
+  if(!FILESYSTEMSETUPCOMPLETE){
+  beginSetup();
+  FILESYSTEMSETUPCOMPLETE = true;
+}
 
+myFile = SD.open("log.txt", FILE_WRITE);
   
   if (myFile) {
-    Serial.print("Writing to test.txt...");
-    myFile.println(d);
+    Serial.print("Writing to log.txt...");
+    myFile.println(information);
 
     myFile.close();
     Serial.println("done.");
   } else {
-    Serial.println("error opening test.txt");
+    Serial.println("error opening log.txt");
   }
 }
 
