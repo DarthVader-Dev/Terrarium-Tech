@@ -18,6 +18,7 @@ class LOGGER {
      void log();
      void init();
      void beginSetup();
+     void log(String dataId, String dataItem);
 };
 
 #endif

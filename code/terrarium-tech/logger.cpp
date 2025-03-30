@@ -15,6 +15,24 @@ void LOGGER::log() {
   if(!LOGGERSETUPCOMPLETE){
     beginSetup();
     LOGGERSETUPCOMPLETE = true;
+
+   Serial.println("Logging Data");
+
+  }
+  
+  DateTime time = rtc.now();
+  Serial.println(String("DateTime::TIMESTAMP_FULL:\t")+time.timestamp(DateTime::TIMESTAMP_FULL));
+  
+}
+
+void LOGGER::log(String dataId, String dataItem) {
+
+  if(!LOGGERSETUPCOMPLETE){
+    beginSetup();
+    LOGGERSETUPCOMPLETE = true;
+    
+   Serial.println("Logging Data");
+
   }
   
   DateTime time = rtc.now();
