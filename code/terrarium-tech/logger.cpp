@@ -3,6 +3,7 @@
 #include "RTClib.h"
 
 RTC_DS1307 rtc;
+
 bool LOGGERSETUPCOMPLETE;
 
 LOGGER::LOGGER() {
@@ -30,7 +31,7 @@ void LOGGER::log(String dataId, String dataItem) {
   if(!LOGGERSETUPCOMPLETE){
     beginSetup();
     LOGGERSETUPCOMPLETE = true;
-    
+    Serial.print(dataId + " " + dataItem);
    Serial.println("Logging Data");
 
   }

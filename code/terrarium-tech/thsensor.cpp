@@ -22,8 +22,8 @@ void THSensor::init() {
 void THSensor::beginSetup(){
    Serial.begin(9600);
 
-  while (!Serial)
-    delay(10);     // will pause Zero, Leonardo, etc until serial console opens
+  // while (!Serial)
+  //   delay(10);     // will pause Zero, Leonardo, etc until serial console opens
 
   Serial.println("SHT31 test");
   if (! sht31.begin(0x44)) {   // Set to 0x45 for alternate i2c addr
