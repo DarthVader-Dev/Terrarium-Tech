@@ -83,18 +83,18 @@ String FILESYSTEM::readFileToString(const char *filename) {
     return content;
 }
 
-void FILESYSTEM::writeLogData(String fileName,char information[]) {
+void FILESYSTEM::writeLogData(String fileName,String information) {
   
   if(!FILESYSTEMSETUPCOMPLETE){
   beginSetup();
   FILESYSTEMSETUPCOMPLETE = true;
 }
 
-myFile = SD.open("log.txt", FILE_WRITE);
+  myFile = SD.open("log.txt", FILE_WRITE);  
   
   if (myFile) {
     Serial.print("Writing to log.txt...");
-    myFile.println(information);
+    myFile.println("This is a new line in the logger!!");
 
     myFile.close();
     Serial.println("done.");

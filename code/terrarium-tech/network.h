@@ -1,9 +1,9 @@
-#ifndef wifi_h
-#define wifi_h
+#ifndef network_h
+#define network_h
 
 #include <Arduino.h>
 
-class WIFI {
+class NETWORK {
 
 
   private: 
@@ -13,7 +13,7 @@ class WIFI {
     
   public: 
 
-    WIFI();
+    NETWORK();
     void init();
     void update();
     byte getState();

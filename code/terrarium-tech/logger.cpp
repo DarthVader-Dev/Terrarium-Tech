@@ -1,10 +1,12 @@
 #include "logger.h"
 #include "file_system.h"
 #include "RTClib.h"
+#include <string>
 
-RTC_DS1307 rtc;
+FILESYSTEM fileSystem;
 
 bool LOGGERSETUPCOMPLETE;
+RTC_DS3231 rtc;
 
 LOGGER::LOGGER() {
 
@@ -21,8 +23,11 @@ void LOGGER::log() {
 
   }
   
-  DateTime time = rtc.now();
-  Serial.println(String("DateTime::TIMESTAMP_FULL:\t")+time.timestamp(DateTime::TIMESTAMP_FULL));
+  //DateTime time = rtc.now();
+
+  
+  fileSystem.writeLogData("testing", "data");
+  //Serial.println(String("DateTime::TIMESTAMP_FULL:\t")+time.timestamp(DateTime::TIMESTAMP_FULL));
   
 }
 
@@ -32,12 +37,13 @@ void LOGGER::log(String dataId, String dataItem) {
     beginSetup();
     LOGGERSETUPCOMPLETE = true;
     Serial.print(dataId + " " + dataItem);
+    fileSystem.writeLogData(dataId, dataItem);
    Serial.println("Logging Data");
 
   }
   
-  DateTime time = rtc.now();
-  Serial.println(String("DateTime::TIMESTAMP_FULL:\t")+time.timestamp(DateTime::TIMESTAMP_FULL));
+  //DateTime time = rtc.now();
+  //Serial.println(String("DateTime::TIMESTAMP_FULL:\t")+time.timestamp(DateTime::TIMESTAMP_FULL));
   
 }
 
@@ -46,13 +52,15 @@ void LOGGER::init(){
 }
 
 void LOGGER::beginSetup() {
-if (! rtc.begin()) {
+
+
+if (!rtc.begin()) {
     Serial.println("Couldn't find RTC");
     Serial.flush();
     while (1) delay(10);
   }
 
-  if (! rtc.isrunning()) {
+  if (! rtc.lostPower()) {
     Serial.println("RTC is NOT running, let's set the time!");
     rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
   }

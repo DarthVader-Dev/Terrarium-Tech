@@ -8,6 +8,7 @@ Adafruit_SHT31 sht31 = Adafruit_SHT31();
 bool THSENSORSETUPCOMPLETE = false;
 
 
+
 THSensor::THSensor(){ //(byte pin) {
   //this->pin = pin;
   

@@ -1,7 +1,7 @@
 #include "include_files.h"
 #include <Wire.h>
 
-WIFI wifiServer;
+NETWORK wifiServer;
 HELPERS helpers;
 LOGGER logger;
 THSensor thSensor;
