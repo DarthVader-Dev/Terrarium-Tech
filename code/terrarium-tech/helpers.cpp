@@ -20,7 +20,7 @@ void HELPERS::beginSetup() {
     }
 
     
-    Serial.print("Initializing WIRE...");
+    Serial.println("Initializing WIRE...");
 }
 
 void HELPERS::tcaselect(uint8_t i) {
@@ -28,6 +28,9 @@ void HELPERS::tcaselect(uint8_t i) {
     beginSetup();
     HELPERSSETUPCOMPLETE = true;
   }
+  String message = "Changing Address to: " + String(i);
+  Serial.println(message);
+Serial.println( i);
   if (i > 7) return;
  
   Wire.beginTransmission(TCAADDR);

@@ -1,11 +1,14 @@
 #include "logger.h"
-#include "file_system.h"
+//#include "file_system.h"
+#include "include_files.h"
 #include "RTClib.h"
 #include <string>
 
 FILESYSTEM fileSystem;
 
 bool LOGGERSETUPCOMPLETE;
+HELPERS logHelper;
+int LOGDIGITPIN = 5;
 RTC_DS3231 rtc;
 
 LOGGER::LOGGER() {
@@ -36,12 +39,12 @@ void LOGGER::log(String dataId, String dataItem) {
   if(!LOGGERSETUPCOMPLETE){
     beginSetup();
     LOGGERSETUPCOMPLETE = true;
+  }
+
+    logHelper.tcaselect(LOGDIGITPIN);
     Serial.print(dataId + " " + dataItem);
     fileSystem.writeLogData(dataId, dataItem);
-   Serial.println("Logging Data");
-
-  }
-  
+    Serial.println("Logging Data");
   //DateTime time = rtc.now();
   //Serial.println(String("DateTime::TIMESTAMP_FULL:\t")+time.timestamp(DateTime::TIMESTAMP_FULL));
   
@@ -53,7 +56,7 @@ void LOGGER::init(){
 
 void LOGGER::beginSetup() {
 
-
+logHelper.tcaselect(LOGDIGITPIN);
 if (!rtc.begin()) {
     Serial.println("Couldn't find RTC");
     Serial.flush();

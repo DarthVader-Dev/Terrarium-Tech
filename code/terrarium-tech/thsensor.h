@@ -19,7 +19,7 @@ class THSensor {
     byte getState();
     void readData();
     void beginSetup();
-   
+    void LogData();
 
 
 };

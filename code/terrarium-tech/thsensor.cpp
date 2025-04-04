@@ -1,13 +1,13 @@
 #include "thsensor.h"
-
+#include "include_files.h"
 
 bool enableHeater = false;
 uint8_t loopCnt = 0;
-
+HELPERS tempHelper;
 Adafruit_SHT31 sht31 = Adafruit_SHT31();
 bool THSENSORSETUPCOMPLETE = false;
-
-
+LOGGER logger = LOGGER();
+int TEMPDIGITPIN = 2;
 
 THSensor::THSensor(){ //(byte pin) {
   //this->pin = pin;
@@ -22,7 +22,7 @@ void THSensor::init() {
 
 void THSensor::beginSetup(){
    Serial.begin(9600);
-
+  tempHelper.tcaselect(TEMPDIGITPIN);
   // while (!Serial)
   //   delay(10);     // will pause Zero, Leonardo, etc until serial console opens
 
@@ -49,7 +49,7 @@ THSENSORSETUPCOMPLETE = true;
 }
 
 
-
+tempHelper.tcaselect(TEMPDIGITPIN);
     float t = sht31.readTemperature();
   float h = sht31.readHumidity();
 
@@ -69,18 +69,27 @@ THSENSORSETUPCOMPLETE = true;
 
   // Toggle heater enabled state every 30 seconds
   // An ~3.0 degC temperature increase can be noted when heater is enabled
-  if (loopCnt >= 30) {
-    enableHeater = !enableHeater;
-    sht31.heater(enableHeater);
-    Serial.print("Heater Enabled State: ");
-    if (sht31.isHeaterEnabled())
-      Serial.println("ENABLED");
-    else
-      Serial.println("DISABLED");
+  // if (loopCnt >= 30) {
+  //   enableHeater = !enableHeater;
+  //   sht31.heater(enableHeater);
+    // Serial.print("Heater Enabled State: ");
+    // if (sht31.isHeaterEnabled())
+    //   Serial.println("ENABLED");
+    // else
+    //   Serial.println("DISABLED");
 
-    loopCnt = 0;
-  }
-  loopCnt++;
+  //   loopCnt = 0;
+  // }
+  // loopCnt++;
+}
+
+void THSensor::LogData(){
+  tempHelper.tcaselect(TEMPDIGITPIN);
+  float t = sht31.readTemperature();
+  float h = sht31.readHumidity();  
+  logger.log("Temperature",String(t));
+  logger.log("Humidity", String(h));
+  
 }
 
 void THSensor::update() {

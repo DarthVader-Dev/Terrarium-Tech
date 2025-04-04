@@ -31,22 +31,22 @@ void FILESYSTEM::beginSetup() {
     Serial.println("initialization failed!");
     return;
   }
-  Serial.println("initialization done.");
+  // Serial.println("initialization done.");
 
-  myFile = SD.open("INDX.HTM");
-  if (myFile) {
-    Serial.println("INDX.HTM:");
+  // myFile = SD.open("INDX.HTM");
+  // if (myFile) {
+  //   Serial.println("INDX.HTM:");
 
   
-    while (myFile.available()) {
-      Serial.write(myFile.read());
-    }
+  //   while (myFile.available()) {
+  //     Serial.write(myFile.read());
+  //   }
 
-    myFile.close();
-  } else {
+  //   myFile.close();
+  // } else {
 
-    Serial.println("error opening INDX.HTM");
-  }
+  //   Serial.println("error opening INDX.HTM");
+  // }
 }
 
 void FILESYSTEM::readData() {
@@ -83,7 +83,7 @@ String FILESYSTEM::readFileToString(const char *filename) {
     return content;
 }
 
-void FILESYSTEM::writeLogData(String fileName,String information) {
+void FILESYSTEM::writeLogData(String dataId, String dataItem) {
   
   if(!FILESYSTEMSETUPCOMPLETE){
   beginSetup();
@@ -93,9 +93,10 @@ void FILESYSTEM::writeLogData(String fileName,String information) {
   myFile = SD.open("log.txt", FILE_WRITE);  
   
   if (myFile) {
-    Serial.print("Writing to log.txt...");
-    myFile.println("This is a new line in the logger!!");
-
+    //Serial.print("Writing to log.txt...");
+    //myFile.println("This is a new line in the logger!!");
+    String data = dataId + " " + dataItem;
+    myFile.println(data);
     myFile.close();
     Serial.println("done.");
   } else {
