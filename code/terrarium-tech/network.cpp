@@ -72,43 +72,7 @@ void NETWORK::printWifiStatus() {
 }
 
 void NETWORK::beginSetup(){
-  // Serial.begin(9600); 
-
-  // pinMode(led, OUTPUT); 
-
-  // if (WiFi.status() == WL_NO_MODULE) {
-
-  //   Serial.println("Communication with WiFi module failed!");
-
-  //   while (true);
-
-  // }
-
-
-  // String fv = WiFi.firmwareVersion();
-
-  // if (fv < WIFI_FIRMWARE_LATEST_VERSION) {
-
-  //   Serial.println("Please upgrade the firmware");
-
-  // }
-
-  // while (status != WL_CONNECTED) {
-
-  //   Serial.print("Attempting to connect to Network named: ");
-
-  //   Serial.println(ssid);
-
-  //   status = WiFi.begin(ssid, pass);
-
-  //   delay(10000);
-
-  // }
-
-  // server.begin();
-
-  // printWifiStatus();   
-
+  
    Serial.begin(9600);
 
 
@@ -148,72 +112,6 @@ if(!WIFISETUPCOMPLETE){
   WIFISETUPCOMPLETE = true;
 }
 
-// WiFiClient client = server.available();
-
-
-//   if (client) { 
-
-//     Serial.println("new client");
-
-//     String currentLine = "";
-
-//     while (client.connected()) {
-
-//       if (client.available()) {
-
-//         char c = client.read();
-
-//         Serial.write(c);
-
-//         if (c == '\n') { 
-
-//           if (currentLine.length() == 0) {
-
-//             client.println("HTTP/1.1 200 OK");
-
-//             client.println("Content-type:text/html");
-
-//             client.println();
-
-//             client.print(fileSystem.getWebPage());
-
-//             client.println();
-
-//             break;
-
-//           } else { 
-
-//             currentLine = "";
-
-//           }
-
-//         } else if (c != '\r') { 
-
-//           currentLine += c; 
-
-//         }
-
-//         if (currentLine.endsWith("GET /H")) {
-
-//           digitalWrite(LED_BUILTIN, HIGH);
-
-//         }
-
-//         if (currentLine.endsWith("GET /L")) {
-
-//           digitalWrite(LED_BUILTIN, LOW);
-
-//         }
-
-//       }
-
-//     }
-
-//     client.stop();
-
-//     Serial.println("client disconnected");
-
-//   }
 WiFiClient client = server.available();
   if (client) {
     Serial.println("new client");
@@ -223,9 +121,7 @@ WiFiClient client = server.available();
       if (client.available()) {
         char c = client.read();
         Serial.write(c);
-        // if you've gotten to the end of the line (received a newline
-        // character) and the line is blank, the HTTP request has ended,
-        // so you can send a reply
+
         if (c == '\n' && currentLineIsBlank) {
           // send a standard HTTP response header
           client.println("HTTP/1.1 200 OK");
@@ -235,15 +131,6 @@ WiFiClient client = server.available();
           client.println();
           client.println("<!DOCTYPE HTML>");
           client.println("<html>");
-          // output the value of each analog input pin
-          // for (int analogChannel = 0; analogChannel < 6; analogChannel++) {
-          //   int sensorReading = analogRead(analogChannel);
-          //   client.print("analog input ");
-          //   client.print(analogChannel);
-          //   client.print(" is ");
-          //   client.print(sensorReading);
-          //   client.println("<br />");
-          // }
 
           client.println();
           client.print(webPageFIle.getWebPage());

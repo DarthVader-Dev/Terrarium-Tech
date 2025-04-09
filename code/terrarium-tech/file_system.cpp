@@ -23,7 +23,6 @@ byte FILESYSTEM::getState() {
 
 void FILESYSTEM::beginSetup() {
   Serial.begin(9600);
-  Serial.print("Initializing SD card...");
  
   pinMode(10, OUTPUT);
 
@@ -31,22 +30,7 @@ void FILESYSTEM::beginSetup() {
     Serial.println("initialization failed!");
     return;
   }
-  // Serial.println("initialization done.");
-
-  // myFile = SD.open("INDX.HTM");
-  // if (myFile) {
-  //   Serial.println("INDX.HTM:");
-
   
-  //   while (myFile.available()) {
-  //     Serial.write(myFile.read());
-  //   }
-
-  //   myFile.close();
-  // } else {
-
-  //   Serial.println("error opening INDX.HTM");
-  // }
 }
 
 void FILESYSTEM::readData() {
@@ -93,12 +77,9 @@ void FILESYSTEM::writeLogData(String dataId, String dataItem) {
   myFile = SD.open("log.txt", FILE_WRITE);  
   
   if (myFile) {
-    //Serial.print("Writing to log.txt...");
-    //myFile.println("This is a new line in the logger!!");
     String data = dataId + " " + dataItem;
     myFile.println(data);
     myFile.close();
-    Serial.println("done.");
   } else {
     Serial.println("error opening log.txt");
   }

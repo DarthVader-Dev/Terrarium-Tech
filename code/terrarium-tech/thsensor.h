@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 #include <Wire.h>
-#include "Adafruit_SHT31.h"
+#include "Adafruit_HTU21DF.h"
 
 class THSensor {
 

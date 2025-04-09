@@ -4,11 +4,11 @@
 bool enableHeater = false;
 uint8_t loopCnt = 0;
 HELPERS tempHelper;
-Adafruit_SHT31 sht31 = Adafruit_SHT31();
+//Adafruit_SHT31 sht31 = Adafruit_SHT31();
 bool THSENSORSETUPCOMPLETE = false;
 LOGGER logger = LOGGER();
 int TEMPDIGITPIN = 2;
-
+Adafruit_HTU21DF HTU21 = Adafruit_HTU21DF();
 THSensor::THSensor(){ //(byte pin) {
   //this->pin = pin;
   
@@ -21,24 +21,25 @@ void THSensor::init() {
 }
 
 void THSensor::beginSetup(){
-   Serial.begin(9600);
+  Serial.begin(9600);
   tempHelper.tcaselect(TEMPDIGITPIN);
   // while (!Serial)
   //   delay(10);     // will pause Zero, Leonardo, etc until serial console opens
 
-  Serial.println("SHT31 test");
-  if (! sht31.begin(0x44)) {   // Set to 0x45 for alternate i2c addr
-    Serial.println("Couldn't find SHT31");
+  Serial.println("HTU21 test");
+  //if (! HTU21.begin(0x44)) {   
+    if (! HTU21.begin()) {// Set to 0x45 for alternate i2c addr
+    Serial.println("Couldn't find HTU21");
     while (1) delay(1);
   }
 
-  Serial.print("Heater Enabled State: ");
-  if (sht31.isHeaterEnabled())
-    Serial.println("ENABLED");
-  else
-    Serial.println("DISABLED");
-  //pinMode(pin, INPUT);
-  //update();
+  // Serial.print("Heater Enabled State: ");
+  // if (HTU21.isHeaterEnabled())
+  //   Serial.println("ENABLED");
+  // else
+  //   Serial.println("DISABLED");
+  // //pinMode(pin, INPUT);
+  // //update();
 }
 
 void THSensor::readData(){
@@ -50,8 +51,8 @@ THSENSORSETUPCOMPLETE = true;
 
 
 tempHelper.tcaselect(TEMPDIGITPIN);
-    float t = sht31.readTemperature();
-  float h = sht31.readHumidity();
+    float t = HTU21.readTemperature();
+  float h = HTU21.readHumidity();
 
   if (! isnan(t)) {  // check if 'is not a number'
     Serial.print("Temp *F = "); Serial.print((t * 1.8) + 32); Serial.print("\t\t");
@@ -66,27 +67,17 @@ tempHelper.tcaselect(TEMPDIGITPIN);
   }
 
   delay(1000);
-
-  // Toggle heater enabled state every 30 seconds
-  // An ~3.0 degC temperature increase can be noted when heater is enabled
-  // if (loopCnt >= 30) {
-  //   enableHeater = !enableHeater;
-  //   sht31.heater(enableHeater);
-    // Serial.print("Heater Enabled State: ");
-    // if (sht31.isHeaterEnabled())
-    //   Serial.println("ENABLED");
-    // else
-    //   Serial.println("DISABLED");
-
-  //   loopCnt = 0;
-  // }
-  // loopCnt++;
 }
 
 void THSensor::LogData(){
+if(!THSENSORSETUPCOMPLETE){
+beginSetup();
+  THSENSORSETUPCOMPLETE = true;
+}
+
   tempHelper.tcaselect(TEMPDIGITPIN);
-  float t = sht31.readTemperature();
-  float h = sht31.readHumidity();  
+  float t = HTU21.readTemperature();
+  float h = HTU21.readHumidity();  
   logger.log("Temperature",String(t));
   logger.log("Humidity", String(h));
   

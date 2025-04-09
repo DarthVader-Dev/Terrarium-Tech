@@ -42,9 +42,9 @@ void LOGGER::log(String dataId, String dataItem) {
   }
 
     logHelper.tcaselect(LOGDIGITPIN);
-    Serial.print(dataId + " " + dataItem);
+    //Serial.print(dataId + " " + dataItem);
     fileSystem.writeLogData(dataId, dataItem);
-    Serial.println("Logging Data");
+    //Serial.println("Logging Data");
   //DateTime time = rtc.now();
   //Serial.println(String("DateTime::TIMESTAMP_FULL:\t")+time.timestamp(DateTime::TIMESTAMP_FULL));
   
@@ -55,7 +55,7 @@ void LOGGER::init(){
 }
 
 void LOGGER::beginSetup() {
-
+Serial.begin(9600);
 logHelper.tcaselect(LOGDIGITPIN);
 if (!rtc.begin()) {
     Serial.println("Couldn't find RTC");
