@@ -6,7 +6,7 @@ uint8_t loopCnt = 0;
 HELPERS tempHelper;
 //Adafruit_SHT31 sht31 = Adafruit_SHT31();
 bool THSENSORSETUPCOMPLETE = false;
-LOGGER logger = LOGGER();
+LOGGER templogger = LOGGER();
 int TEMPDIGITPIN = 2;
 Adafruit_HTU21DF HTU21 = Adafruit_HTU21DF();
 THSensor::THSensor(){ //(byte pin) {
@@ -78,9 +78,12 @@ beginSetup();
   tempHelper.tcaselect(TEMPDIGITPIN);
   float t = HTU21.readTemperature();
   float h = HTU21.readHumidity();  
-  logger.log("Temperature",String(t));
-  logger.log("Humidity", String(h));
-  
+
+  String d = "\"temp\":" + String(t) + ",\"humidity\":" + String(h);
+  // logger.log("Temperature",String(t));
+  // logger.log("Humidity", String(h));
+  //Serial.println("LogData" + d);
+  templogger.log("ENV","THLOG.JS", d);
 }
 
 void THSensor::update() {

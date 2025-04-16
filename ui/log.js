@@ -9,5 +9,7 @@ logData = [
     {"timestamp": "2025-03-12 12:07:00", "temp": 71.6, "humidity": 50.1},
     {"timestamp": "2025-03-12 12:08:00", "temp": 73.2, "humidity": 46.8},
     {"timestamp": "2025-03-12 12:08:00", "temp": 73.2, "humidity": 46.8},
-    {"timestamp": "2025-03-12 12:09:00", "temp": 75.9, "humidity": 42.9}
-];
+    {"timestamp": "2025-03-12 12:09:00", "temp": 75.9, "humidity": 42.9},
+    {"timestamp": "2025-03-12 12:09:00", "temp": 75.9, "humidity": 42.9},
+    {"timestamp": "2025-03-12 12:09:00", "temp": 75.9, "humidity": 42.9},
+]

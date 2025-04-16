@@ -1,7 +1,7 @@
 #ifndef logger_h
 #define logger_h
 
-
+#include <RTClib.h>
 #include <Arduino.h>
 
 class LOGGER {
@@ -18,7 +18,8 @@ class LOGGER {
      void log();
      void init();
      void beginSetup();
-     void log(String dataId, String dataItem);
+     void log(String type,String logFile , String dataItem);
+     DateTime getCurrentDateTime();
 };
 
 #endif

@@ -112,30 +112,57 @@ if(!WIFISETUPCOMPLETE){
   WIFISETUPCOMPLETE = true;
 }
 
+String request = "";
+String requestType = "";
+String fileString = "";
+
 WiFiClient client = server.available();
   if (client) {
-    Serial.println("new client");
-    // an HTTP request ends with a blank line
+
     boolean currentLineIsBlank = true;
     while (client.connected()) {
       if (client.available()) {
         char c = client.read();
-        Serial.write(c);
+        request += c;
+        //Serial.write(c);
+
 
         if (c == '\n' && currentLineIsBlank) {
+
+        //Serial.println(request);
+
+        if(request.indexOf("GET /ENV/UVLOG.JS") >= 0 || request.indexOf("GET /ENV/THLOG.JS") >= 0){
+            String filen = "";
+          if(request.indexOf("GET /ENV/UVLOG.JS") >= 0){
+            filen = "ENV/UVLOG.JS";
+          }
+
+          if(request.indexOf("GET /ENV/THLOG.JS") >= 0){
+                filen = "ENV/THLOG.JS";
+          }
+            //Serial.println(filen);
+            requestType = "Content-Type: application/javascript";
+            fileString = webPageFIle.getLogFile(filen);
+        }
+
+        if(request.indexOf("GET / ") >= 0){
+            //Serial.println("Web File");
+            requestType = "Content-Type: text/html";
+            fileString = webPageFIle.getWebPage();
+        } 
           // send a standard HTTP response header
           client.println("HTTP/1.1 200 OK");
-          client.println("Content-Type: text/html");
+          client.println(requestType);
           client.println("Connection: close");  // the connection will be closed after completion of the response
-          client.println("Refresh: 5");  // refresh the page automatically every 5 sec
+          client.println("Refresh: 15");  // refresh the page automatically every 5 sec
           client.println();
-          client.println("<!DOCTYPE HTML>");
-          client.println("<html>");
+          // client.println("<!DOCTYPE HTML>");
+          // client.println("<html>");
 
           client.println();
-          client.print(webPageFIle.getWebPage());
+          client.print(fileString);
           client.println();
-          client.println("</html>");
+          // client.println("</html>");
           break;
         }
         if (c == '\n') {
@@ -147,12 +174,9 @@ WiFiClient client = server.available();
         }
       }
     }
-    // give the web browser time to receive the data
-    delay(1);
 
-    // close the connection:
+    delay(10);
     client.stop();
-    Serial.println("client disconnected");
   }
 }
 

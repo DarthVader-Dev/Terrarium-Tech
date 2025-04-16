@@ -1,15 +1,17 @@
 #include "logger.h"
 //#include "file_system.h"
 #include "include_files.h"
-#include "RTClib.h"
+#include <RTClib.h>
 #include <string>
 
+
+RTC_DS3231 rtc;
 FILESYSTEM fileSystem;
 
 bool LOGGERSETUPCOMPLETE;
 HELPERS logHelper;
 int LOGDIGITPIN = 5;
-RTC_DS3231 rtc;
+
 
 LOGGER::LOGGER() {
 
@@ -26,15 +28,15 @@ void LOGGER::log() {
 
   }
   
-  //DateTime time = rtc.now();
+  DateTime time = rtc.now();
 
   
-  fileSystem.writeLogData("testing", "data");
+  //fileSystem.writeLogData("testing", "data");
   //Serial.println(String("DateTime::TIMESTAMP_FULL:\t")+time.timestamp(DateTime::TIMESTAMP_FULL));
   
 }
-
-void LOGGER::log(String dataId, String dataItem) {
+void LOGGER::log(String type,String logFile , String dataItem) {
+//void LOGGER::log(String dataId, String dataItem) {
 
   if(!LOGGERSETUPCOMPLETE){
     beginSetup();
@@ -43,11 +45,13 @@ void LOGGER::log(String dataId, String dataItem) {
 
     logHelper.tcaselect(LOGDIGITPIN);
     //Serial.print(dataId + " " + dataItem);
-    fileSystem.writeLogData(dataId, dataItem);
+
     //Serial.println("Logging Data");
-  //DateTime time = rtc.now();
+  DateTime time = rtc.now();
   //Serial.println(String("DateTime::TIMESTAMP_FULL:\t")+time.timestamp(DateTime::TIMESTAMP_FULL));
-  
+    String logItem = "{\"timestamp\":\"" + String(time.timestamp(DateTime::TIMESTAMP_FULL)) + "\"," + dataItem + "},]";
+    //Serial.println("Log" + logItem);
+    fileSystem.writeLogData(type,logFile, logItem);
 }
 
 void LOGGER::init(){
@@ -64,7 +68,11 @@ if (!rtc.begin()) {
   }
 
   if (! rtc.lostPower()) {
-    Serial.println("RTC is NOT running, let's set the time!");
+    //Serial.println("RTC is NOT running, let's set the time!");
     rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
   }
+}
+
+DateTime LOGGER::getCurrentDateTime(){
+  return rtc.now();
 }
