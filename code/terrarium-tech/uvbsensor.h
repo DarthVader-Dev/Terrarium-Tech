@@ -18,7 +18,7 @@ class UVBSensor {
     void readData();
     void beginSetup();
     void LogData();
-
+    String getJsonValue();
 
 };
 

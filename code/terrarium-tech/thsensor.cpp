@@ -86,6 +86,21 @@ beginSetup();
   templogger.log("ENV","THLOG.JS", d);
 }
 
+String THSensor::getJsonValue(){
+  if(!THSENSORSETUPCOMPLETE){
+beginSetup();
+  THSENSORSETUPCOMPLETE = true;
+}
+
+  tempHelper.tcaselect(TEMPDIGITPIN);
+  float t = HTU21.readTemperature();
+  float h = HTU21.readHumidity();  
+
+  String result = "\"temp\":" + String(t) + ",\"humidity\":" + String(h);
+  return result;
+}
+
+
 void THSensor::update() {
    
 } 

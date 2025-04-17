@@ -11,6 +11,8 @@ FILESYSTEM fileSystem;
 bool LOGGERSETUPCOMPLETE;
 HELPERS logHelper;
 int LOGDIGITPIN = 5;
+THSensor thSensor;
+UVBSensor uvbSensor;
 
 
 LOGGER::LOGGER() {
@@ -71,6 +73,12 @@ if (!rtc.begin()) {
     //Serial.println("RTC is NOT running, let's set the time!");
     rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
   }
+}
+
+void LOGGER::logSensorData(){
+    String data = thSensor.getJsonValue() + "," + uvbSensor.getJsonValue(); 
+    Serial.println(data); 
+  log("ENV", "LOG.JS", data);
 }
 
 DateTime LOGGER::getCurrentDateTime(){

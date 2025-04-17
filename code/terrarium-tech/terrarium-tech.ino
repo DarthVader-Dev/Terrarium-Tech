@@ -3,11 +3,11 @@
 
 NETWORK wifiServer;
 HELPERS helpers;
-THSensor thSensor;
-UVBSensor uvbSensor;
-//FILESYSTEM fSystem;
-//LOGGER loggerHelper;
-//Camera camera;
+// THSensor thSensor;
+// UVBSensor uvbSensor;
+FILESYSTEM fSystem;
+LOGGER logger;
+bool CAMACTIVE = true;
 #define cameraconnection Serial1
 Adafruit_VC0706 cam = Adafruit_VC0706(&cameraconnection);
 #define chipSelect 10
@@ -18,10 +18,15 @@ int LOGINTERVAL = 0;
 int CAMERAINTERNVAL = 0;
 bool SHOWWEBPAGE = true;
 bool LogComplete = false;
+bool showFiles = true;
 
 void setup(){
 
   helpers.beginSetup();  
+
+
+    
+
   //fSystem.beginSetup();
     //Serial.begin(9600);
   Serial.println("VC0706 Camera test");
@@ -81,14 +86,18 @@ void setup(){
 
 void loop(){
 
-  
+  // if(showFiles){
+  //   fSystem.printAllFiles();
+  // }
+  // showFiles = false;
+  // Serial.println(showFiles);
     //if(SHOWWEBPAGE){
         wifiServer.showWebPage();
   
   //}
 
-
-
+// // ******** BEGIN CAMERA ******** //
+if(CAMACTIVE){
   if (cam.motionDetected()) {
    Serial.println("Motion!");   
    cam.setMotionDetect(false);
@@ -139,27 +148,36 @@ Serial.println(imgFile.name());
   Serial.println("...Done!");
   cam.setMotionDetect(false);
   CAMERAINTERNVAL+= 1;
+  CAMACTIVE = false;
 
- }
-  if(LOGINTERVAL == 10){
+}
+}
+// // ******** END CAMERA ******** //
+  if(LOGINTERVAL == 15){
     LOGINTERVAL = 0;
   }
 
-  if(CAMERAINTERNVAL == (30 * numMinutesBetweenPics)){
+  if(CAMERAINTERNVAL == (60 * numMinutesBetweenPics)){
     //camera.setActive(true);
+  cam.resumeVideo();
+  cam.setMotionDetect(true);
+  
     CAMERAINTERNVAL = 0;
+    CAMACTIVE = true;
   }
 
   //if(!LogComplete){
   if(LOGINTERVAL == 0){
+    logger.logSensorData();
     //Serial.println("loop");
-    thSensor.LogData();
-    uvbSensor.LogData();
+    // thSensor.LogData();
+    // uvbSensor.LogData();
+    // Serial.println("logging");
     //LogComplete = true;
   }
 //Serial.println(camera.motionActive());
   //if(CAMERAINTERNVAL == 0 && camera.motionActive()){
-  if(CAMERAINTERNVAL == 0){
+  if(!CAMACTIVE && CAMERAINTERNVAL != 0){
   //  Serial.println(CAMERAINTERNVAL);
    // Serial.println(camera.motionActive());    
    // if(came.getCamera().detectsMotion()){
@@ -167,10 +185,10 @@ Serial.println(imgFile.name());
     //      camera.setActive(false);
           CAMERAINTERNVAL+= 1;
    // }
-  cam.resumeVideo();
-  cam.setMotionDetect(true);
+  // cam.resumeVideo();
+  // cam.setMotionDetect(true);
+  // }
   }
-
   //}
 LOGINTERVAL++;
 LogComplete = true;
@@ -178,8 +196,9 @@ LogComplete = true;
 CAMERAINTERNVAL +=1;
 Serial.println(CAMERAINTERNVAL);
   delay(1000);
-}
+  Serial.println(LOGINTERVAL);
 
+}
 // void setUpCamera(){
 
 // Serial.println("camera setup");

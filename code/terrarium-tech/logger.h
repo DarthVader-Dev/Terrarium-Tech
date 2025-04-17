@@ -19,7 +19,8 @@ class LOGGER {
      void init();
      void beginSetup();
      void log(String type,String logFile , String dataItem);
-     DateTime getCurrentDateTime();
+     DateTime getCurrentDateTime();     
+     void logSensorData();
 };
 
 #endif

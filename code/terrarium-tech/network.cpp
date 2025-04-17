@@ -112,6 +112,7 @@ if(!WIFISETUPCOMPLETE){
   WIFISETUPCOMPLETE = true;
 }
 
+
 String request = "";
 String requestType = "";
 String fileString = "";
@@ -131,10 +132,14 @@ WiFiClient client = server.available();
 
         //Serial.println(request);
 
-        if(request.indexOf("GET /ENV/UVLOG.JS") >= 0 || request.indexOf("GET /ENV/THLOG.JS") >= 0){
+        if(request.indexOf("GET /ENV/LOG.JS") >= 0 || request.indexOf("GET /ENV/UVLOG.JS") >= 0 || request.indexOf("GET /ENV/THLOG.JS") >= 0){
             String filen = "";
           if(request.indexOf("GET /ENV/UVLOG.JS") >= 0){
             filen = "ENV/UVLOG.JS";
+          }
+
+          if(request.indexOf("GET /ENV/LOG.JS") >= 0){
+                filen = "ENV/LOG.JS";
           }
 
           if(request.indexOf("GET /ENV/THLOG.JS") >= 0){

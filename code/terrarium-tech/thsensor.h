@@ -20,6 +20,7 @@ class THSensor {
     void readData();
     void beginSetup();
     void LogData();
+    String getJsonValue();
 
 
 };

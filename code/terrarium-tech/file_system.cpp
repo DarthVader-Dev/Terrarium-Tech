@@ -71,15 +71,15 @@ void FILESYSTEM::readData() {
 // }
 
 String FILESYSTEM::readFileToString(String filename) {
-//Serial.println("readFileToString - PRE" + filename);
+Serial.println("readFileToString - PRE" + filename);
 
     File file = SD.open(filename);
     if (!file) {
-        //Serial.println("Failed to open file.");
+        Serial.println("Failed to open file.");
         return "";
     }
 
-    //Serial.println("file found - PRE " + filename);
+    Serial.println("file found - PRE " + filename);
 
     String content = "";
     //Serial.println("index of " + String(filename.indexOf("ENV")));
@@ -93,15 +93,15 @@ String FILESYSTEM::readFileToString(String filename) {
         }
 
       if(filename.indexOf("ENV") >= 0){        
-        //Serial.println("ENV file.");
+        Serial.println("ENV file.");
             while (file.available()) {
               content += (char)file.read(); 
-              //Serial.println(content);
+              Serial.println(content);
             }
         
       }
 
-    //Serial.println("file closing -  " + filename);
+    Serial.println("file closing -  " + filename);
     file.close();
     //Serial.println("readFileToString" + filename);
     return content;
@@ -223,6 +223,68 @@ File FILESYSTEM::getImageFileToSaveTo(String fileName){
 //   }
 
 // }
+
+void FILESYSTEM::printAllFiles(){
+
+  while (true) {
+
+    File root = SD.open("/");
+    File entry =  root.openNextFile();
+
+
+    if (! entry) {
+
+
+      // no more files
+
+
+      break;
+
+
+    }
+
+
+    for (uint8_t i = 0; i < 0; i++) {
+
+
+      Serial.print('\t');
+
+
+    }
+
+
+    Serial.print(entry.name());
+
+
+    if (entry.isDirectory()) {
+
+
+      Serial.println("/");
+
+
+      printDirectory(entry, 0 + 1);
+
+
+    } else {
+
+
+      // files have sizes, directories do not
+
+
+      Serial.print("\t\t");
+
+
+      Serial.println(entry.size(), DEC);
+
+
+    }
+
+
+    entry.close();
+
+
+  }
+}
 
 void FILESYSTEM::printDirectory(File dir, int numTabs) {
 

@@ -28,6 +28,7 @@ class FILESYSTEM {
     void enumerateLines(File file, int pos);
     String getLogFile(String fileName);
     void printDirectory(File dir, int numTabs);
+    void printAllFiles();
   
 };
 

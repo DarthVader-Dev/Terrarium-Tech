@@ -41,6 +41,18 @@ void UVBSensor::beginSetup(){
   // //update();
 }
 
+String UVBSensor::getJsonValue(){
+if(!UVBSENSORSETUPCOMPLETE){
+beginSetup();
+UVBSENSORSETUPCOMPLETE = true;
+}
+int sensor_value = analogRead(UV_SENSOR_PIN); // Get raw sensor reading
+  float volts = sensor_value * 5.0 / 1024.0;
+  String result = "\"uvIndex\":" + String(sensor_value);
+
+  return result;
+}
+
 void UVBSensor::readData(){
 
 if(!UVBSENSORSETUPCOMPLETE){
