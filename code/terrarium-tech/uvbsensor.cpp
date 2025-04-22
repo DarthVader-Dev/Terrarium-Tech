@@ -111,3 +111,16 @@ byte UVBSensor::getState() {
   update();
   return state;
 }
+
+float UVBSensor::getUvIndex(){
+  if(!UVBSENSORSETUPCOMPLETE){
+beginSetup();
+  UVBSENSORSETUPCOMPLETE = true;
+}
+
+  int sensor_value = analogRead(UV_SENSOR_PIN); // Get raw sensor reading
+  float volts = sensor_value * 5.0 / 1024.0;
+  //Serial.println("UV");
+  return volts;
+  
+}

@@ -12,6 +12,7 @@ bool CAMACTIVE = true;
 Adafruit_VC0706 cam = Adafruit_VC0706(&cameraconnection);
 #define chipSelect 10
 int numMinutesBetweenPics = 1;
+bool CAMSETUP = false;
 
 
 int LOGINTERVAL = 0;
@@ -21,23 +22,47 @@ bool LogComplete = false;
 bool showFiles = true;
 
 void setup(){
+delay(1000);  // Give power time to stabilize
+Serial.begin(9600);
+delay(200);   // Allow Serial and power to settle
 
-  helpers.beginSetup();  
+if (!SD.begin(chipSelect)) {
+  Serial.println("❌ SD failed to initialize in setup");
+  while (true);
+}
 
+if (!SD.exists("/PHOTOS")) {
+  SD.mkdir("/PHOTOS");
+  Serial.println("✅ /PHOTOS folder created");
+}
 
-    
+if (!SD.exists("/ENV")) {
+  SD.mkdir("/ENV");
+  Serial.println("✅ /PHOTOS folder created");
 
-  //fSystem.beginSetup();
-    //Serial.begin(9600);
+SdFile::dateTimeCallback(fSystem.fDateTime);
+}
+
+if(!CAMSETUP){
+   setupCam();
+   CAMSETUP = true;
+}
+}
+
+void setupCam(){
+   
   Serial.println("VC0706 Camera test");
   
   // see if the card is present and can be initialized:
-  if (!SD.begin(chipSelect)) {
-    Serial.println("Card failed, or not present");
-    // don't do anything more:
-    return;
-  }  
-  
+  // if (!SD.begin(chipSelect)) {
+  //   Serial.println("Card failed, or not present");
+  //   // don't do anything more:
+  //   return;
+  // }  
+ //   File root = SD.open("/");
+  //fSystem.listSdFiles(root,0);
+  //root.close();
+
   // Try to locate the camera
   if (cam.begin()) {
     Serial.println("Camera Found:");
@@ -58,8 +83,8 @@ void setup(){
   // Set the picture size - you can choose one of 640x480, 320x240 or 160x120 
   // Remember that bigger pictures take longer to transmit!
   
-  //cam.setImageSize(VC0706_640x480);        // biggest
-  cam.setImageSize(VC0706_320x240);        // medium
+  cam.setImageSize(VC0706_640x480);        // biggest
+  //cam.setImageSize(VC0706_320x240);        // medium
   //cam.setImageSize(VC0706_160x120);          // small
 
   // You can read the size back from the camera (optional, but maybe useful?)
@@ -80,28 +105,31 @@ void setup(){
     Serial.println("ON");
   else 
     Serial.println("OFF");
-
-    //SdFile::dateTimeCallback(dateTime);
 }
 
 void loop(){
-
+//Serial.println("loop");
+//wifiServer.showWebPage();
   // if(showFiles){
   //   fSystem.printAllFiles();
   // }
   // showFiles = false;
   // Serial.println(showFiles);
     //if(SHOWWEBPAGE){
-        wifiServer.showWebPage();
-  
-  //}
+        
 
+  //}
+// if(!CAMSETUP){
+//    setupCam();
+//    CAMSETUP = true;
+// }
 // // ******** BEGIN CAMERA ******** //
-if(CAMACTIVE){
+if(CAMERAINTERNVAL == 0){
+  cam.setMotionDetect(true);
   if (cam.motionDetected()) {
    Serial.println("Motion!");   
    cam.setMotionDetect(false);
-   
+   Serial.println("Cam IF");
   if (! cam.takePicture()) 
     Serial.println("Failed to snap!");
   else 
@@ -125,7 +153,7 @@ Serial.println(imgFile.name());
     Serial.println("SD open failed");
     return;
   }
-
+          
   Serial.println(imgFile.available());
   uint32_t jpglen = cam.frameLength();
   Serial.print(jpglen, DEC);
@@ -153,112 +181,46 @@ Serial.println(imgFile.name());
 }
 }
 // // ******** END CAMERA ******** //
-  if(LOGINTERVAL == 15){
+  if(LOGINTERVAL == 5){
     LOGINTERVAL = 0;
   }
 
-  if(CAMERAINTERNVAL == (60 * numMinutesBetweenPics)){
-    //camera.setActive(true);
+  if(CAMERAINTERNVAL == 60){
+
   cam.resumeVideo();
   cam.setMotionDetect(true);
-  
+  Serial.println("Camera Reset");
     CAMERAINTERNVAL = 0;
     CAMACTIVE = true;
   }
 
-  //if(!LogComplete){
+
   if(LOGINTERVAL == 0){
-    logger.logSensorData();
-    //Serial.println("loop");
-    // thSensor.LogData();
-    // uvbSensor.LogData();
-    // Serial.println("logging");
-    //LogComplete = true;
+    //Serial.println("logging");
+    logger.logJsonData();
+    //Serial.println("logged");
+
   }
-//Serial.println(camera.motionActive());
-  //if(CAMERAINTERNVAL == 0 && camera.motionActive()){
-  if(!CAMACTIVE && CAMERAINTERNVAL != 0){
-  //  Serial.println(CAMERAINTERNVAL);
-   // Serial.println(camera.motionActive());    
-   // if(came.getCamera().detectsMotion()){
-    //  camera.takeSnapShot();
-    //      camera.setActive(false);
-          CAMERAINTERNVAL+= 1;
-   // }
-  // cam.resumeVideo();
-  // cam.setMotionDetect(true);
+
+  // if(!CAMACTIVE && CAMERAINTERNVAL != 0){
+  //         CAMERAINTERNVAL+= 1;
   // }
+
+    if(CAMERAINTERNVAL != 0){
+          CAMERAINTERNVAL+= 1;
   }
-  //}
+  
 LOGINTERVAL++;
 LogComplete = true;
-//SHOWWEBPAGE = false;
-CAMERAINTERNVAL +=1;
-Serial.println(CAMERAINTERNVAL);
-  delay(1000);
-  Serial.println(LOGINTERVAL);
 
+//CAMERAINTERNVAL +=1;
+digitalWrite(LED_BUILTIN, HIGH);
+delay(1000);
+//wifiServer.showWebPage();
+//Serial.print("CAMACTIVE -"); Serial.println(CAMACTIVE);
+// Serial.print("CAMERAINTERNVAL -"); Serial.println(CAMERAINTERNVAL);
+digitalWrite(LED_BUILTIN, LOW);
 }
-// void setUpCamera(){
-
-// Serial.println("camera setup");
-
-//   if(chipSelect != 10) pinMode(10, OUTPUT); // SS on Uno, etc.
-
-//   Serial.begin(9600);
-//   Serial.println("VC0706 Camera test");
-//   if (camera.begin()) {
-//     Serial.println("Camera Found:");
-//   } else {
-//     Serial.println("No camera found?");
-//     return;
-//   }
-//   // Print out the camera version information (optional)
-//   char *reply = camera.getVersion();
-//   if (reply == 0) {
-//     Serial.print("Failed to get version");
-//   } else {
-//     Serial.println("-----------------");
-//     Serial.print(reply);
-//     Serial.println("-----------------");
-//   }
-
-//   // Set the picture size - you can choose one of 640x480, 320x240 or 160x120 
-//   // Remember that bigger pictures take longer to transmit!
-  
-//   //cam.setImageSize(VC0706_640x480);        // biggest
-//   camera.setImageSize(VC0706_320x240);        // medium
-//   //cam.setImageSize(VC0706_160x120);          // small
-
-//   // You can read the size back from the camera (optional, but maybe useful?)
-//   uint8_t imgsize = camera.getImageSize();
-//   Serial.print("Image size: ");
-//   if (imgsize == VC0706_640x480) Serial.println("640x480");
-//   if (imgsize == VC0706_320x240) Serial.println("320x240");
-//   if (imgsize == VC0706_160x120) Serial.println("160x120");
 
 
-//   //  Motion detection system can alert you when the camera 'sees' motion!
-//   camera.setMotionDetect(true);           // turn it on
-//   //cam.setMotionDetect(false);        // turn it off   (default)
-
-//   // You can also verify whether motion detection is active!
-//   Serial.print("Motion detection is ");
-//   if (camera.getMotionDetect()) 
-//     Serial.println("ON");
-//   else 
-//     Serial.println("OFF");
-
-  //  SdFile::dateTimeCallback(dateTime);
-// }
-
-// void dateTime(uint16_t* date, uint16_t* time) {
-//   DateTime now = loggerHelper.getCurrentDateTime();
-
-//   // Date format: bits 15–9 = year since 1980, bits 8–5 = month, bits 4–0 = day
-//   *date = FAT_DATE(now.year(), now.month(), now.day());
-
-//   // Time format: bits 15–11 = hours, bits 10–5 = minutes, bits 4–0 = seconds/2
-//   *time = FAT_TIME(now.hour(), now.minute(), now.second());
-// }
 

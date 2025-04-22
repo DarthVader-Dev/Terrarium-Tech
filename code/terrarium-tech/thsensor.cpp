@@ -26,7 +26,7 @@ void THSensor::beginSetup(){
   // while (!Serial)
   //   delay(10);     // will pause Zero, Leonardo, etc until serial console opens
 
-  Serial.println("HTU21 test");
+  //Serial.println("HTU21 test");
   //if (! HTU21.begin(0x44)) {   
     if (! HTU21.begin()) {// Set to 0x45 for alternate i2c addr
     Serial.println("Couldn't find HTU21");
@@ -100,6 +100,29 @@ beginSetup();
   return result;
 }
 
+float THSensor::getHumid(){
+if(!THSENSORSETUPCOMPLETE){
+  beginSetup();
+  THSENSORSETUPCOMPLETE = true;
+}
+  tempHelper.tcaselect(TEMPDIGITPIN);
+ //Serial.println("humid");
+  float results = HTU21.readHumidity();
+  //Serial.println("humid");
+  return results;
+}
+
+float THSensor::getTemp(){
+if(!THSENSORSETUPCOMPLETE){
+  beginSetup();
+  THSENSORSETUPCOMPLETE = true;
+}
+  tempHelper.tcaselect(TEMPDIGITPIN);
+  //Serial.println("Temp");
+  float results = HTU21.readTemperature();
+  //Serial.println("Temp");
+  return results;
+}
 
 void THSensor::update() {
    

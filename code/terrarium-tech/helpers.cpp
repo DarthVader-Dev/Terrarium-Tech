@@ -13,14 +13,14 @@ HELPERS::HELPERS() {
 // }
 
 void HELPERS::beginSetup() {
-  Serial.println("helper setup");
+ 
     if(!Serial){
       Wire.begin();
-      Serial.begin(9600);
     }
 
+
     
-    Serial.println("Initializing WIRE...");
+    //Serial.println("Initializing WIRE...");
 }
 
 void HELPERS::tcaselect(uint8_t i) {
@@ -29,12 +29,13 @@ void HELPERS::tcaselect(uint8_t i) {
     HELPERSSETUPCOMPLETE = true;
   }
   String message = "Changing Address to: " + String(i);
-  Serial.println(message);
-  Serial.println( i);
+  //Serial.println(message);
+  //Serial.println( i);
   if (i > 7) return;
  
   Wire.beginTransmission(TCAADDR);
   Wire.write(1 << i);
   Wire.endTransmission();  
+  //Serial.println("Wire Transferred");
 }
 

@@ -21,7 +21,8 @@ class THSensor {
     void beginSetup();
     void LogData();
     String getJsonValue();
-
+    float getHumid();
+    float getTemp();
 
 };
 

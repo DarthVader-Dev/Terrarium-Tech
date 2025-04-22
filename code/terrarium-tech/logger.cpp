@@ -4,13 +4,13 @@
 #include <RTClib.h>
 #include <string>
 
-
 RTC_DS3231 rtc;
 FILESYSTEM fileSystem;
 
 bool LOGGERSETUPCOMPLETE;
 HELPERS logHelper;
 int LOGDIGITPIN = 5;
+int MAX_LOG_ENTRIES = 250;
 THSensor thSensor;
 UVBSensor uvbSensor;
 
@@ -61,7 +61,7 @@ void LOGGER::init(){
 }
 
 void LOGGER::beginSetup() {
-Serial.begin(9600);
+//Serial.begin(9600);
 logHelper.tcaselect(LOGDIGITPIN);
 if (!rtc.begin()) {
     Serial.println("Couldn't find RTC");
@@ -77,10 +77,74 @@ if (!rtc.begin()) {
 
 void LOGGER::logSensorData(){
     String data = thSensor.getJsonValue() + "," + uvbSensor.getJsonValue(); 
-    Serial.println(data); 
+    //Serial.println(data); 
   log("ENV", "LOG.JS", data);
 }
 
-DateTime LOGGER::getCurrentDateTime(){
-  return rtc.now();
+void LOGGER::logJsonData(){
+    if(!LOGGERSETUPCOMPLETE){
+    beginSetup();
+    LOGGERSETUPCOMPLETE = true;
+
+   Serial.println("Logging Data");
+
+  }
+    //String data = thSensor.getJsonValue() + "," + uvbSensor.getJsonValue(); 
+    //Serial.println("logJsonData"); 
+    float temp = thSensor.getTemp();
+    //Serial.println(temp); 
+    float humid = thSensor.getHumid();
+    //Serial.println(humid); 
+    float uvIndex = uvbSensor.getUvIndex();
+   //Serial.println(uvIndex); 
+   //DateTime time = getCurrentDateTime();
+  //String currentTime = ;
+  fileSystem.writeJsonLogData(temp,humid, uvIndex,getCurrentDateTime());
 }
+
+String LOGGER::getCurrentDateTime() {
+
+      if(!LOGGERSETUPCOMPLETE){
+    beginSetup();
+    LOGGERSETUPCOMPLETE = true;
+
+   Serial.println("Logging Data");
+
+  }
+
+  logHelper.tcaselect(LOGDIGITPIN);
+
+  DateTime time = rtc.now();
+
+  // Serial.print("DateTime::TIMESTAMP_FULL:\t");
+  // Serial.println(time.timestamp(DateTime::TIMESTAMP_FULL));
+
+  // Serial.print("DateTime::TIMESTAMP_DATE:\t");
+  // Serial.println(time.timestamp(DateTime::TIMESTAMP_DATE));
+
+  // Serial.print("DateTime::TIMESTAMP_TIME:\t");
+  // Serial.println(time.timestamp(DateTime::TIMESTAMP_TIME));
+
+  // Serial.println();
+
+  return time.timestamp(DateTime::TIMESTAMP_FULL);  // Don't call rtc.now() again
+}
+
+
+DateTime LOGGER::getFileDateTime() {
+
+     if(!LOGGERSETUPCOMPLETE){
+    beginSetup();
+    LOGGERSETUPCOMPLETE = true;
+
+   Serial.println("Logging Data");
+
+  }
+
+  logHelper.tcaselect(LOGDIGITPIN);
+
+  DateTime time = rtc.now();
+
+  return time;  // Don't call rtc.now() again
+}
+

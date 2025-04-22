@@ -2,6 +2,7 @@
 #define network_h
 
 #include <Arduino.h>
+#include <WiFiNINA.h>
 
 class NETWORK {
 
@@ -21,7 +22,12 @@ class NETWORK {
     void showWebPage();
     void beginSetup();
     void writeData(char d[]);
-
+    void sendFile(WiFiClient& client, const char* path, const char* contentType);
+    void sendFile(WiFiClient& client, String path, const char* contentType);
+    void sendJsonFile(WiFiClient& client, const char* path, const char* contentType);
+    void send404(WiFiClient& client);
+    void sendNoFavicon(WiFiClient& client);
+    String getImagePath(String req);
 };
 
 #endif

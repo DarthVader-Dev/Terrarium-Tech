@@ -1,0 +1,61 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Photos</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    table { border-collapse: collapse; width: 100%; }
+    td, th { border: 1px solid #ccc; padding: 8px; }
+  </style>
+  <link rel="icon" href="data:,">
+
+</head>
+<body>
+  <h1>Photos</h1>
+  <div id="photos">
+
+  </div>
+  <script>
+    const pre = window.location.href.includes("192") ? "" : "/ui/"; 
+    for(i = 0; i < 30; i++){
+      const imgNum = i < 9 ? ("0" + i) : i; 
+      const imgSource =  pre +  "PHT/IMAGE" + imgNum + ".JPG";
+      document.getElementById("photos").innerHTML += 
+      "<a href='" + imgSource + "' target='_blank'><img src='" + imgSource + "' /></a> ";
+    }
+
+  </script>
+
+<!-- 
+  <script>
+    fetch('ENV/LOG.JS')
+      .then(res => res.text())
+      .then(data => {
+        const lines = data.trim().split('\n');
+        const table = document.querySelector("#logTable tbody");
+        table.innerHTML = '';
+
+        lines.forEach(line => {
+          try {
+            const entry = JSON.parse(line);
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${entry.timestamp || '-'}</td>
+              <td>${entry.temp.toFixed(2)}</td>
+              <td>${entry.humidity.toFixed(2)}</td>
+              <td>${entry.uvIndex.toFixed(2)}</td>
+            `;
+            table.appendChild(row);
+          } catch (err) {
+            console.error("Bad JSON line:", line);
+          }
+        });
+      })
+      .catch(err => {
+        document.body.innerHTML += `<p>Error loading log: ${err}</p>`;
+      });
+  </script> -->
+</body>
+</html>
