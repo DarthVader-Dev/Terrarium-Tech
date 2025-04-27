@@ -54,7 +54,7 @@ void CAMHELPER::beginSetup(){
 motionDetectionActive = true;
 
 if(chipSelect != 10) pinMode(10, OUTPUT); // SS on Uno, etc.
-  Serial.begin(9600);
+  //Serial.begin(9600);
   Serial.println("VC0706 Camera test");
 
   if (adaCam.begin()) {

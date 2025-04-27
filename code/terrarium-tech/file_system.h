@@ -21,7 +21,6 @@ class FILESYSTEM {
     byte getState();    
     void beginSetup();
     void writeLogData(String type,String logFile, String dataItem);
-    //bool savePhoto(String filename, uint32_t jpglen, uint8_t *buffer, uint8_t bytesToRead,Adafruit_VC0706 cam);
     File getImageFileToSaveTo(String fileName);
     void readData();
     String getWebPage();              
@@ -31,9 +30,11 @@ class FILESYSTEM {
     void printDirectory(File dir, int numTabs);
     void printAllFiles();
     void listSdFiles(File dir, int numTabs);
-    void writeJsonLogData(float temp, float humidity, float uvIndex, String timeS);
+    void writeJsonLogData(float temp, float humidity, float uvIndex, String dte);
     String readAndCleanJsonFile();
     static void fDateTime(uint16_t* date, uint16_t* time);
+    void writeError(String error);
+    
 };
 
 #endif

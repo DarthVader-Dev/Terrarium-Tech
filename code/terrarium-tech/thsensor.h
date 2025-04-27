@@ -12,7 +12,7 @@ class THSensor {
     byte state;
 
   public: 
-    //ThSensor(byte pin);
+
     THSensor();
     void init();
     void update();

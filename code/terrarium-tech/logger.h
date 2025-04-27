@@ -23,6 +23,7 @@ class LOGGER {
      void logSensorData();
      void logJsonData();
      DateTime getFileDateTime();
+     void logErr(String error);
 };
 
 #endif

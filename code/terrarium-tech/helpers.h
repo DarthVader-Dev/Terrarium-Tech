@@ -15,8 +15,9 @@ class HELPERS {
   public: 
     
     HELPERS();
-    void tcaselect(uint8_t i);
+    static void tcaselect(uint8_t i);
     void beginSetup();    
+    //static void fDateTime(uint16_t* date, uint16_t* time);
     //  void log();
     //  void init();
 
