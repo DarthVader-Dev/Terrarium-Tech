@@ -189,23 +189,24 @@ void FILESYSTEM::listSdFiles(File dir, int numTabs = 0) {
   }
 }
 
-void FILESYSTEM::writeJsonLogData(float temp, float humidity, float uvIndex, String timeS) {
+void FILESYSTEM::writeJsonLogData(float temp, float humidity, float uvIndex){//, String timeS) {
   Serial.println("writeJsonLogData");
 
 if(!FILESYSTEMSETUPCOMPLETE){
-  beginSetup();
+  //beginSetup();
   FILESYSTEMSETUPCOMPLETE = true;
 }
   String filename = "/ENV/LOG.JS";
   //Open in append mode
   File file = SD.open(filename, FILE_WRITE);
   if (!file) {
+    Serial.println(filename);
     Serial.println("Failed to open log.js for appending");
     return;
   }
 
   StaticJsonDocument<256> doc;
-  doc["timestamp"] = timeS;
+  // doc["timestamp"] = timeS;
   doc["temp"] = temp;
   doc["humidity"] = humidity;
   doc["uvIndex"] = uvIndex;

@@ -1,7 +1,8 @@
 #include "include_files.h"
 #include <Wire.h>
 
-NETWORK wifiServer;
+// NETWORK wifiServer;
+NETWORKR4 wifiServer;
 HELPERS helpers;
 // THSensor thSensor;
 // UVBSensor uvbSensor;
@@ -34,7 +35,7 @@ pinMode(10, OUTPUT);
 
  setupCam();
 
-SdFile::dateTimeCallback(fSystem.fDateTime);
+//SdFile::dateTimeCallback(fSystem.fDateTime);
 helpers.beginSetup();
 }
 void setupCam(){

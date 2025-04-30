@@ -55,16 +55,16 @@ void LOGGER::init(){
 void LOGGER::beginSetup() {
 
 logHelper.tcaselect(LOGDIGITPIN);
-if (!rtc.begin()) {
-    Serial.println("Couldn't find RTC");
-    Serial.flush();
-    while (1) delay(10);
-  }
+// if (!rtc.begin()) {
+//     Serial.println("Couldn't find RTC");
+//     Serial.flush();
+//     while (1) delay(10);
+//   }
 
-  if (! rtc.lostPower()) {
+//   if (! rtc.lostPower()) {
 
-    rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
-  }
+//     rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+//   }
 }
 
 void LOGGER::logSensorData(){
@@ -89,7 +89,7 @@ void LOGGER::logJsonData(){
    Serial.println(uvIndex); 
    Serial.print(" - ");
 
-  fileSystem.writeJsonLogData(temp,humid, uvIndex,getCurrentDateTime());
+  fileSystem.writeJsonLogData(temp,humid, uvIndex);//,getCurrentDateTime());
 }
 
 String LOGGER::getCurrentDateTime() {

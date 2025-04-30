@@ -30,7 +30,7 @@ class FILESYSTEM {
     void printDirectory(File dir, int numTabs);
     void printAllFiles();
     void listSdFiles(File dir, int numTabs);
-    void writeJsonLogData(float temp, float humidity, float uvIndex, String dte);
+    void writeJsonLogData(float temp, float humidity, float uvIndex);//, String dte);
     String readAndCleanJsonFile();
     static void fDateTime(uint16_t* date, uint16_t* time);
     void writeError(String error);
