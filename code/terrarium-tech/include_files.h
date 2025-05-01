@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <RTClib.h>
 #include <SPI.h>
-#include <SD.h>
+// #include <SD.h>
 #include <ArduinoJson.h>
 #include <Adafruit_VC0706.h>
 #include "helpers.h"

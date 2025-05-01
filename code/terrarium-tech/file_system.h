@@ -6,24 +6,18 @@
 #include <Arduino.h>
 
 class FILESYSTEM {
-
-
-  private: 
-    byte pin;
-    byte state;
-
     
   public: 
     
-    FILESYSTEM();
-    void init();
-    void update();
-    byte getState();    
-    void beginSetup();
+    FILESYSTEM(uint8_t csPin); 
+    bool begin();
+    bool isInitialized();
     void writeLogData(String type,String logFile, String dataItem);
     File getImageFileToSaveTo(String fileName);
     void readData();
-    String getWebPage();              
+    String getWebPage();   
+    File getHomePageFile();   
+    File open(const char* path, uint8_t mode);        
     String readFileToString(String filename);
     void enumerateLines(File file, int pos);
     String getLogFile(String fileName);
@@ -34,6 +28,10 @@ class FILESYSTEM {
     String readAndCleanJsonFile();
     static void fDateTime(uint16_t* date, uint16_t* time);
     void writeError(String error);
+    
+    private:
+      uint8_t _csPin;
+      bool _initialized;
     
 };
 

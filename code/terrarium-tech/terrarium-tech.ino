@@ -1,12 +1,13 @@
 #include "include_files.h"
 #include <Wire.h>
-
+const uint8_t SD_CS = 10;
 // NETWORK wifiServer;
-NETWORKR4 wifiServer;
-HELPERS helpers;
+
 // THSensor thSensor;
 // UVBSensor uvbSensor;
-FILESYSTEM fSystem;
+FILESYSTEM fSystem(SD_CS);
+NETWORKR4 wifiServer;
+HELPERS helpers;
 LOGGER logger;
 bool CAMACTIVE = true;
 #define cameraconnection Serial1
@@ -26,18 +27,31 @@ unsigned long start = millis();
 #define LED_PIN LED_BUILTIN 
 
 void setup() {
-
-delay(1500);  // Let everything power up
   Serial.begin(9600);
+delay(1500);  // Let everything power up
 
-pinMode(10, OUTPUT); 
-  pinMode(LED_PIN, OUTPUT);
 
- setupCam();
+ pinMode(10, OUTPUT);
+  digitalWrite(10, HIGH);
+  if (!fSystem.begin()) {
+    Serial.println("ERROR: SD init failed.");
+  } else {
+    //fSystem.log("log.txt", "System booted.");
+  }
+
+// pinMode(10, OUTPUT); 
+//   pinMode(LED_PIN, OUTPUT);
+
+//  setupCam();
 
 //SdFile::dateTimeCallback(fSystem.fDateTime);
 helpers.beginSetup();
-}
+// if(!fSystem.begin()){
+//   Serial.println("Error Starting up file system");
+// }
+// Serial.println(fSystem.initialized() ? "Yes" : "No");
+//wifiServer.beginSetup();
+ }
 void setupCam(){
   //Delay so all components can power up
 delay(2000);
@@ -102,6 +116,14 @@ delay(2000);
     Serial.println("OFF");
 
 CAMSETUP = true;
+
+  if (fSystem.begin()) {
+    Serial.println("SD card initialized.");
+    //sdHelper.log("startup.txt", "Boot complete.");
+  } else {
+    Serial.println("SD card initialization failed.");
+  }
+
 }
 
 void loop(){
@@ -109,77 +131,77 @@ void loop(){
 
 
 // // // ******** BEGIN CAMERA ******** //
-if(CAMERAINTERNVAL == 0){
-if(!CAMSETUP){
-   setupCam();
-   CAMSETUP = true;
-}
-if (cam.motionDetected()) {
-   Serial.println("Motion!");   
-   cam.setMotionDetect(false);
+// if(CAMERAINTERNVAL == 0){
+// if(!CAMSETUP){
+//    setupCam();
+//    CAMSETUP = true;
+// }
+// if (cam.motionDetected()) {
+//    Serial.println("Motion!");   
+//    cam.setMotionDetect(false);
    
-  if (! cam.takePicture()) 
-    Serial.println("Failed to snap!");
-  else 
-    Serial.println("Picture taken!");
+//   if (! cam.takePicture()) 
+//     Serial.println("Failed to snap!");
+//   else 
+//     Serial.println("Picture taken!");
   
-  char filename[13];
-  strcpy(filename, "IMAGE00.JPG");
-  for (int i = 0; i < 100; i++) {
-    filename[5] = '0' + i/10;
-    filename[6] = '0' + i%10;
-    // create if does not exist, do not open existing, write, sync after write
-    if (! SD.exists(filename)) {
-      break;
-    }
-  }
+//   char filename[13];
+//   strcpy(filename, "IMAGE00.JPG");
+//   for (int i = 0; i < 100; i++) {
+//     filename[5] = '0' + i/10;
+//     filename[6] = '0' + i%10;
+//     // create if does not exist, do not open existing, write, sync after write
+//     if (! SD.exists(filename)) {
+//       break;
+//     }
+//   }
   
-  File imgFile = SD.open(filename, FILE_WRITE);
+//   File imgFile = SD.open(filename, FILE_WRITE);
   
-  uint32_t jpglen = cam.frameLength();
-  Serial.print(jpglen, DEC);
-  Serial.println(" byte image");
+//   uint32_t jpglen = cam.frameLength();
+//   Serial.print(jpglen, DEC);
+//   Serial.println(" byte image");
  
-  Serial.print("Writing image to "); Serial.print(filename);
+//   Serial.print("Writing image to "); Serial.print(filename);
   
-  while (jpglen > 0) {
-    // read 32 bytes at a time;
-    uint8_t *buffer;
-    uint8_t bytesToRead = min((uint32_t)32, jpglen); // change 32 to 64 for a speedup but may not work with all setups!
-    buffer = cam.readPicture(bytesToRead);
-    imgFile.write(buffer, bytesToRead);
+//   while (jpglen > 0) {
+//     // read 32 bytes at a time;
+//     uint8_t *buffer;
+//     uint8_t bytesToRead = min((uint32_t)32, jpglen); // change 32 to 64 for a speedup but may not work with all setups!
+//     buffer = cam.readPicture(bytesToRead);
+//     imgFile.write(buffer, bytesToRead);
 
 
-    jpglen -= bytesToRead;
-  }
-  delay(500);
-  imgFile.close();
-  Serial.println("...Done!");
-  cam.resumeVideo();
-  cam.setMotionDetect(true);
-  CAMERAINTERNVAL+= 1;
- }
-}
+//     jpglen -= bytesToRead;
+//   }
+//   delay(500);
+//   imgFile.close();
+//   Serial.println("...Done!");
+//   cam.resumeVideo();
+//   cam.setMotionDetect(true);
+//   CAMERAINTERNVAL+= 1;
+//  }
+// }
 // // ******** END CAMERA ******** //
   if(LOGINTERVAL == 5){
     LOGINTERVAL = 0;
   }
 
-  if(CAMERAINTERNVAL == 60){
+  // if(CAMERAINTERNVAL == 60){
 
-  cam.resumeVideo();
-  cam.setMotionDetect(true);
-  Serial.println("Camera Reset");
-    CAMERAINTERNVAL = 0;
-    CAMACTIVE = true;
-  }
+  // cam.resumeVideo();
+  // cam.setMotionDetect(true);
+  // Serial.println("Camera Reset");
+  //   CAMERAINTERNVAL = 0;
+  //   CAMACTIVE = true;
+  // }
 
 
   if(LOGINTERVAL == 0){
 
     logger.logJsonData();
     
-    Serial.println("Completed Log");
+    //Serial.println("Completed Log");
 
   } 
 

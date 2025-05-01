@@ -4,10 +4,13 @@
 #include <string>
 
 RTC_DS3231 rtc;
-FILESYSTEM fileSystem;
+// FILESYSTEM fileSystem;
+extern FILESYSTEM fSystem;
+//HELPERS logHelper;
+extern HELPERS helpers;
 
 bool LOGGERSETUPCOMPLETE;
-HELPERS logHelper;
+
 int LOGDIGITPIN = 2;
 int MAX_LOG_ENTRIES = 250;
 THSensor thSensor;
@@ -39,13 +42,13 @@ void LOGGER::log(String type,String logFile , String dataItem) {
     LOGGERSETUPCOMPLETE = true;
   }
 
-    logHelper.tcaselect(LOGDIGITPIN);
+    helpers.tcaselect(LOGDIGITPIN);
 
   DateTime time = rtc.now();
 
     String logItem = "{\"timestamp\":\"" + String(time.timestamp(DateTime::TIMESTAMP_FULL)) + "\"," + dataItem + "},]";
 
-    fileSystem.writeLogData(type,logFile, logItem);
+    fSystem.writeLogData(type,logFile, logItem);
 }
 
 void LOGGER::init(){
@@ -54,7 +57,7 @@ void LOGGER::init(){
 
 void LOGGER::beginSetup() {
 
-logHelper.tcaselect(LOGDIGITPIN);
+helpers.tcaselect(LOGDIGITPIN);
 // if (!rtc.begin()) {
 //     Serial.println("Couldn't find RTC");
 //     Serial.flush();
@@ -80,16 +83,16 @@ void LOGGER::logJsonData(){
 
   }
     float temp = thSensor.getTemp();
-    Serial.print(temp); 
-    Serial.print(" - ");
+    // Serial.print(temp); 
+    // Serial.print(" - ");
     float humid = thSensor.getHumid();
-    Serial.println(humid); 
-    Serial.print(" - ");
+    // Serial.println(humid); 
+    // Serial.print(" - ");
     float uvIndex = uvbSensor.getUvIndex();
-   Serial.println(uvIndex); 
-   Serial.print(" - ");
+  //  Serial.println(uvIndex); 
+  //  Serial.print(" - ");
 
-  fileSystem.writeJsonLogData(temp,humid, uvIndex);//,getCurrentDateTime());
+  fSystem.writeJsonLogData(temp,humid, uvIndex);//,getCurrentDateTime());
 }
 
 String LOGGER::getCurrentDateTime() {
@@ -102,7 +105,7 @@ String LOGGER::getCurrentDateTime() {
 
   }
 
-  logHelper.tcaselect(LOGDIGITPIN);
+  helpers.tcaselect(LOGDIGITPIN);
 
   DateTime time = rtc.now();
   return time.timestamp(DateTime::TIMESTAMP_FULL);  
@@ -119,7 +122,7 @@ DateTime LOGGER::getFileDateTime() {
 
   }
 
-  logHelper.tcaselect(LOGDIGITPIN);
+  helpers.tcaselect(LOGDIGITPIN);
 
   DateTime time = rtc.now();
 
@@ -131,7 +134,7 @@ void LOGGER::logErr(String error){
     beginSetup();
     LOGGERSETUPCOMPLETE = true;
   }
-  fileSystem.writeError(error);
+  fSystem.writeError(error);
 }
 
 

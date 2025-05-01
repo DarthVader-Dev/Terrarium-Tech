@@ -28,6 +28,8 @@ class NETWORKR4 {
     void send404(WiFiClient& client);
     void sendNoFavicon(WiFiClient& client);
     String getImagePath(String req);
+    bool isConnected();
+    void connect();
 };
 
 #endif

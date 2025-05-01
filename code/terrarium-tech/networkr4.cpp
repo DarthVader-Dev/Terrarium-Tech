@@ -16,7 +16,8 @@ int led =  LED_BUILTIN;
 int status = WL_IDLE_STATUS;
         //
 
-FILESYSTEM webPageFIle;  
+// FILESYSTEM fSystem;  
+extern FILESYSTEM fSystem;
 
 bool WIFISETUPCOMPLETE;
 bool fileWrittenTo;
@@ -57,39 +58,30 @@ void NETWORKR4::printWifiStatus() {
 }
 
 void NETWORKR4::beginSetup(){
-
-  if (WiFi.status() == WL_NO_MODULE) {
-    Serial.println("WiFi module not found.");
+if (WiFi.status() == WL_NO_MODULE) {
+    Serial.println("Communication with WiFi module failed!");
+    // don't continue
     while (true);
   }
 
   String fv = WiFi.firmwareVersion();
   if (fv < WIFI_FIRMWARE_LATEST_VERSION) {
-    Serial.print("Outdated firmware: ");
-    Serial.println(fv);
+    Serial.println("Please upgrade the firmware");
   }
 
-  int attempts = 0;
-  const int maxAttempts = 15;
+  // attempt to connect to WiFi network:
+  while (status != WL_CONNECTED) {
+    Serial.print("Attempting to connect to SSID: ");
+    Serial.println(ssid);
+    // Connect to WPA/WPA2 network. Change this line if using open or WEP network:
+    status = WiFi.begin(ssid, pass);
 
-  while ((status = WiFi.begin(ssid, pass)) != WL_CONNECTED && attempts < maxAttempts) {
-    Serial.print("Attempt ");
-    Serial.print(attempts + 1);
-    Serial.println(": Connecting...");
-    delay(1000);
-    attempts++;
+    // wait 10 seconds for connection:
+    delay(10000);
   }
-
-  if (status == WL_CONNECTED) {
-    Serial.println("Connected to WiFi.");
-    server.begin();
-    printWifiStatus();
-    pinMode(LED_BUILTIN, OUTPUT);
-  } else {
-    pinMode(LED_BUILTIN, OUTPUT);
-    digitalWrite(LED_BUILTIN, HIGH);
-    Serial.println("Failed to connect after max attempts.");
-  }
+  server.begin();
+  // you're connected now, so print out the status:
+  printWifiStatus();
 }
 
 
@@ -100,7 +92,7 @@ void NETWORKR4::writeData(char d[]){
 }
 
 void NETWORKR4::sendFile(WiFiClient& client, const char* path, const char* contentType) {
-  File file = SD.open(path);
+  File file = fSystem.getHomePageFile(); // SD.open(path);
   Serial.println(path);
   if (!file) {
     Serial.print(path);Serial.println(" Not Found");
@@ -212,7 +204,7 @@ if(req.indexOf("GET / ") >= 0 || req.indexOf("GET /INDX.HTM") >= 0){
     sendFile(client, "INDX.HTM", "text/html");
 }
 else if (req.indexOf("GET /ENV/LOG.JS") >= 0 || req.indexOf("GET /log.js") >= 0) { 
- sendJsonFile(client, "/ENV/LOG.JS", "application/json");
+ sendJsonFile(client, "LOG.JS", "application/json");
 }else if (req.indexOf("GET /PH.HTM ") >= 0) {
     Serial.println("PHOTOS");
     sendFile(client, "PH.HTM", "text/html");
@@ -245,3 +237,22 @@ void NETWORKR4::sendNoFavicon(WiFiClient& client) {
   client.println();
 }
 
+
+void NETWORKR4::connect() {
+  Serial.print("Connecting to ");
+  Serial.println(ssid);
+
+  int status = WL_IDLE_STATUS;
+  while (status != WL_CONNECTED) {
+    status = WiFi.begin(ssid, pass);
+    delay(1000);
+    Serial.print(".");
+  }
+
+  Serial.println("\nWiFi connected. IP: ");
+  Serial.println(WiFi.localIP());
+}
+
+bool NETWORKR4::isConnected() {
+  return WiFi.status() == WL_CONNECTED;
+}

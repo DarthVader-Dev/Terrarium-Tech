@@ -1,5 +1,6 @@
 #include "file_system.h"
 #include "include_files.h"
+#include <SD.h>
 File myFile;
 LOGGER fLogHelper;
 int RTCDIGITPIN = 2;
@@ -7,32 +8,21 @@ int RTCDIGITPIN = 2;
 bool FILESYSTEMSETUPCOMPLETE;
 
 
-FILESYSTEM::FILESYSTEM() {
-  init();
-}
-void FILESYSTEM::init() {
-}
-
-void FILESYSTEM::update() {
-}
-byte FILESYSTEM::getState() {
-  update();
-  return state;
-}
+FILESYSTEM::FILESYSTEM(uint8_t csPin) : _csPin(csPin), _initialized(false) {}
 
 
+bool FILESYSTEM::begin() {
+  Serial.print("Initializing SD on CS pin ");
+  Serial.println(_csPin);
 
-void FILESYSTEM::beginSetup() {
+  
+  pinMode(_csPin, OUTPUT);
+  digitalWrite(_csPin, HIGH); // Deselect SD to avoid SPI conflict
 
-  pinMode(10, OUTPUT);
+  _initialized = SD.begin(_csPin);
 
-  if (!SD.begin(10)) {
-    Serial.println("initialization failed!");
-    return;
-  }
-
-
-
+  Serial.println(_initialized ? "SD.begin() succeeded." : "SD.begin() failed.");
+  return _initialized;
 }
 
 void FILESYSTEM::readData() {
@@ -57,7 +47,7 @@ void FILESYSTEM::readData() {
 String FILESYSTEM::readFileToString(String filename) {
 
   if(!FILESYSTEMSETUPCOMPLETE){
-  beginSetup();
+  begin();
   FILESYSTEMSETUPCOMPLETE = true;
 }
 Serial.println("readFileToString - PRE" + filename);
@@ -102,7 +92,7 @@ Serial.println("last }: " + content.lastIndexOf('}'));
 void FILESYSTEM::writeLogData(String type,String logFile, String dataItem) {
 
   if(!FILESYSTEMSETUPCOMPLETE){
-  beginSetup();
+  begin();
   FILESYSTEMSETUPCOMPLETE = true;
 }
 
@@ -137,17 +127,31 @@ void FILESYSTEM::enumerateLines(File file, int pos){ }
 
 String FILESYSTEM::getWebPage(){
 if(!FILESYSTEMSETUPCOMPLETE){
-  beginSetup();
+  begin();
   FILESYSTEMSETUPCOMPLETE = true;
 }
 
  return readFileToString("INDX.HTM");
 }
 
+File FILESYSTEM::getHomePageFile(){
+if(!FILESYSTEMSETUPCOMPLETE){
+  begin();
+  FILESYSTEMSETUPCOMPLETE = true;
+}
+
+File homePage = open("INDX.HTM", FILE_READ);
+if(!homePage){
+  Serial.println("Error returning home page");
+}
+Serial.println("returning home page");
+ return homePage;
+}
+
 
 String FILESYSTEM::getLogFile(String fileName){
 if(!FILESYSTEMSETUPCOMPLETE){
-  beginSetup();
+  begin();
   FILESYSTEMSETUPCOMPLETE = true;
 }
   
@@ -193,12 +197,12 @@ void FILESYSTEM::writeJsonLogData(float temp, float humidity, float uvIndex){//,
   Serial.println("writeJsonLogData");
 
 if(!FILESYSTEMSETUPCOMPLETE){
-  //beginSetup();
+  begin();
   FILESYSTEMSETUPCOMPLETE = true;
 }
-  String filename = "/ENV/LOG.JS";
+  const char* filename = "LOG.JS";
   //Open in append mode
-  File file = SD.open(filename, FILE_WRITE);
+  File file = open(filename, FILE_WRITE);
   if (!file) {
     Serial.println(filename);
     Serial.println("Failed to open log.js for appending");
@@ -222,7 +226,7 @@ if(!FILESYSTEMSETUPCOMPLETE){
 
 void FILESYSTEM::writeError(String error) {
 if(!FILESYSTEMSETUPCOMPLETE){
-  beginSetup();
+  begin();
   FILESYSTEMSETUPCOMPLETE = true;
 }
 
@@ -273,3 +277,12 @@ void FILESYSTEM::fDateTime(uint16_t* date, uint16_t* time) {
   *time = FAT_TIME(now.hour(), now.minute(), now.second());
 }
 
+File FILESYSTEM::open(const char* path, uint8_t mode) {
+  Serial.println(_initialized);
+  if (!_initialized) return File();
+  return SD.open(path, mode);
+}
+
+ bool FILESYSTEM::isInitialized(){
+  return _initialized;
+ }

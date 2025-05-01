@@ -3,7 +3,8 @@
 
 bool enableHeater = false;
 uint8_t loopCnt = 0;
-HELPERS tempHelper;
+//HELPERS tempHelper;
+extern HELPERS helpers;
 bool THSENSORSETUPCOMPLETE = false;
 LOGGER templogger = LOGGER();
 int TEMPDIGITPIN = 5;
@@ -21,7 +22,7 @@ void THSensor::init() {
 
 void THSensor::beginSetup(){
 
-  tempHelper.tcaselect(TEMPDIGITPIN);
+  helpers.tcaselect(TEMPDIGITPIN);
  
     if (! HTU21.begin()) {
     Serial.println("Couldn't find HTU21");
@@ -38,7 +39,7 @@ THSENSORSETUPCOMPLETE = true;
 }
 
 
-tempHelper.tcaselect(TEMPDIGITPIN);
+helpers.tcaselect(TEMPDIGITPIN);
     float t = HTU21.readTemperature();
   float h = HTU21.readHumidity();
 
@@ -63,7 +64,7 @@ beginSetup();
   THSENSORSETUPCOMPLETE = true;
 }
 
-  tempHelper.tcaselect(TEMPDIGITPIN);
+  helpers.tcaselect(TEMPDIGITPIN);
   float t = HTU21.readTemperature();
   float h = HTU21.readHumidity();  
 
@@ -78,7 +79,7 @@ beginSetup();
   THSENSORSETUPCOMPLETE = true;
 }
 
-  tempHelper.tcaselect(TEMPDIGITPIN);
+  helpers.tcaselect(TEMPDIGITPIN);
   float t = HTU21.readTemperature();
   float h = HTU21.readHumidity();  
 
@@ -91,7 +92,7 @@ if(!THSENSORSETUPCOMPLETE){
   beginSetup();
   THSENSORSETUPCOMPLETE = true;
 }
-  tempHelper.tcaselect(TEMPDIGITPIN);
+  helpers.tcaselect(TEMPDIGITPIN);
 
   float results = HTU21.readHumidity();
 
@@ -103,7 +104,7 @@ if(!THSENSORSETUPCOMPLETE){
   beginSetup();
   THSENSORSETUPCOMPLETE = true;
 }
-  tempHelper.tcaselect(TEMPDIGITPIN);
+  helpers.tcaselect(TEMPDIGITPIN);
 
   float results = HTU21.readTemperature();
 
