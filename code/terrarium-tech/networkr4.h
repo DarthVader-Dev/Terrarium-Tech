@@ -2,7 +2,7 @@
 #define networkr4_h
 
 #include <Arduino.h>
-#include "WiFiS3.h"
+#include "WiFi.h"
 
 class NETWORKR4 {
 

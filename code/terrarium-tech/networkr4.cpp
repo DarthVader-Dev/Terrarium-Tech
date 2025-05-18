@@ -3,7 +3,7 @@
 #include "arduino_secrets.h" 
 // #include <WiFiNINA.h>
 
-#include "WiFiS3.h"
+#include "WiFi.h"
 
 char ssid[] = SECRET_SSID;
 
@@ -76,8 +76,8 @@ if (WiFi.status() == WL_NO_MODULE) {
     // Connect to WPA/WPA2 network. Change this line if using open or WEP network:
     status = WiFi.begin(ssid, pass);
 
-    // wait 10 seconds for connection:
-    delay(10000);
+    // wait 2 seconds for connection:
+    delay(1000);
   }
   server.begin();
   // you're connected now, so print out the status:
@@ -88,7 +88,7 @@ if (WiFi.status() == WL_NO_MODULE) {
 
 void NETWORKR4::writeData(char d[]){
   WiFiClient client = server.available(); 
-  client.println(d);
+  client.write(d);
 }
 
 void NETWORKR4::sendFile(WiFiClient& client, const char* path, const char* contentType) {
@@ -100,12 +100,12 @@ void NETWORKR4::sendFile(WiFiClient& client, const char* path, const char* conte
     return;
   }
   Serial.println("web file found");
-  client.println("HTTP/1.1 200 OK");
-  client.print("Content-Type: ");
-  client.println(contentType);
-  client.println("Connection: close");
+  client.write("HTTP/1.1 200 OK\r\n");
+  client.write("Content-Type: ");
+  client.write(contentType);
+  client.write("Connection: close\r\n");
 
-  client.println();
+  client.write("\r\n");
 
   while (file.available()) {
 
@@ -122,12 +122,12 @@ void NETWORKR4::sendFile(WiFiClient& client, String path, const char* contentTyp
     return;
   }
   Serial.println("web file found");
-  client.println("HTTP/1.1 200 OK");
-  client.print("Content-Type: ");
-  client.println(contentType);
-  client.println("Connection: close");
+  client.write("HTTP/1.1 200 OK\r\n");
+  client.write("Content-Type: ");
+  client.write(contentType);
+  client.write("Connection: close\r\n");
 
-  client.println();
+  client.write("\r\n");
 
   while (file.available()) {
 
@@ -148,12 +148,12 @@ void NETWORKR4::sendJsonFile(WiFiClient& client, const char* path, const char* c
 
   Serial.println("File Found " + String(path));
 
-  client.println("HTTP/1.1 200 OK");
-  client.print("Content-Type: ");
-  client.println(contentType);
-  client.println("Connection: close");
-  //client.println("Refresh: 30");
-  client.println();
+  client.write("HTTP/1.1 200 OK\r\n");
+  client.write("Content-Type: ");
+  client.write(contentType);
+  client.write("Connection: close\r\n");
+  //client.write("Refresh: 30");
+  client.write("\r\n");
 
   while (file.available()) {
     client.write(file.read());
@@ -167,11 +167,11 @@ void NETWORKR4::sendJsonFile(WiFiClient& client, const char* path, const char* c
 void NETWORKR4::send404(WiFiClient& client) {
    String req = client.readStringUntil('\r');
   Serial.println(req);
-  client.println("HTTP/1.1 404 Not Found");
-  client.println("Content-Type: text/plain");
-  client.println("Connection: close");
-  client.println();
-  client.println("404 - Not Found");
+  client.write("HTTP/1.1 404 Not Found\r\n");
+  client.write("Content-Type: text/plain\r\n");
+  client.write("Connection: close\r\n");
+  client.write("\r\n");
+  client.write("404 - Not Found\r\n");
   client.stop();
 }
 
@@ -204,7 +204,7 @@ if(req.indexOf("GET / ") >= 0 || req.indexOf("GET /INDX.HTM") >= 0){
     sendFile(client, "INDX.HTM", "text/html");
 }
 else if (req.indexOf("GET /ENV/LOG.JS") >= 0 || req.indexOf("GET /log.js") >= 0) { 
- sendJsonFile(client, "LOG.JS", "application/json");
+ sendJsonFile(client, "/ENV/LOG.JS", "application/json");
 }else if (req.indexOf("GET /PH.HTM ") >= 0) {
     Serial.println("PHOTOS");
     sendFile(client, "PH.HTM", "text/html");
@@ -232,9 +232,9 @@ String NETWORKR4::getImagePath(String request){
 
 
 void NETWORKR4::sendNoFavicon(WiFiClient& client) {
-  client.println("HTTP/1.1 204 No Content");
-  client.println("Connection: close");
-  client.println();
+  client.write("HTTP/1.1 204 No Content\r\n");
+  client.write("Connection: close\r\n");
+  client.write("\r\n");
 }
 
 

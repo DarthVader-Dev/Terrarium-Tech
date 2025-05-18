@@ -211,7 +211,7 @@ void loop(){
 
 LOGINTERVAL++;
 LogComplete = true;
-wifiServer.showWebPage();
+//wifiServer.showWebPage();
 delay(1000);
 
 

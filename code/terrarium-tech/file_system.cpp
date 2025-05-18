@@ -200,7 +200,7 @@ if(!FILESYSTEMSETUPCOMPLETE){
   begin();
   FILESYSTEMSETUPCOMPLETE = true;
 }
-  const char* filename = "LOG.JS";
+  const char* filename = "/ENV/LOG.JS";
   //Open in append mode
   File file = open(filename, FILE_WRITE);
   if (!file) {

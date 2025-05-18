@@ -37,14 +37,14 @@ if(HELPERSSETUPCOMPLETE){
       HELPERSSETUPCOMPLETE = true;
 }
   String message = "Changing Address to: " + String(i);
-  //Serial.println(message);
+  Serial.println(message);
   //Serial.println( i);
   if (i > 7) return;
  
   Wire.beginTransmission(TCAADDR);
   Wire.write(1 << i);
   Wire.endTransmission();  
-  //Serial.println("Wire Transferred");
+  Serial.println("Wire Transferred");
 }
 
 // void HELPERS::fDateTime(uint16_t* date, uint16_t* time) {

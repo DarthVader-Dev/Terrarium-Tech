@@ -78,7 +78,7 @@ beginSetup();
 
   int sensor_value = analogRead(UV_SENSOR_PIN); // Get raw sensor reading
   float volts = sensor_value * 5.0 / 1024.0;
-  //Serial.println("UV");
+  // Serial.println("UV Value: " + String(sensor_value));
   return volts;
   
 }
